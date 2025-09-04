@@ -134,7 +134,8 @@
       width: 100%;
       border-collapse: collapse;
       font-size: 15px;
-      min-width: 520px; /* allows horizontal scroll on tiny screens */
+      min-width: 420px; /* slightly smaller so you scroll less */
+      table-layout: auto; /* let columns size to content */
     }
     th, td {
       border-bottom: 1px solid var(--border);
@@ -157,26 +158,26 @@
       box-shadow: 0 2px 0 var(--border); /* faint rule under header */
     }
 
-    /* Sticky first column (names) */
+    /* Sticky first column (names) — ONLY as wide as the name */
     th.team-col, td.team-col {
       text-align: left;
-      width: 60%;
-      white-space: normal;
-      word-break: break-word;
+      width: 1%;                 /* shrink-to-fit */
+      max-width: max-content;    /* cap to content width */
+      white-space: nowrap;       /* no wrapping => no extra height/width */
       position: sticky;
       left: 0;
-      z-index: 2;              /* keep above other cells */
-      background: var(--card); /* solid background over scrolled content */
-      box-shadow: 4px 0 6px -4px var(--sticky-shadow); /* subtle divider while scrolling */
+      z-index: 2;
+      background: var(--card);
+      box-shadow: 4px 0 6px -4px var(--sticky-shadow);
+      padding-right: 14px;       /* small gutter next to sticky edge */
     }
-    thead th.team-col {
-      z-index: 5; /* header above body cells */
-    }
+    thead th.team-col { z-index: 5; }
 
     /* Center the checkbox columns */
     td.center-col, th.center-col {
       text-align: center;
-      width: 20%;
+      /* give them a predictable width so the scroll distance is minimal */
+      width: 150px;
     }
 
     /* Bright green checkmarks (desktop + mobile, even when disabled) */
@@ -192,7 +193,6 @@
       position: relative;
       vertical-align: middle;
     }
-    /* The check glyph */
     input[type="checkbox"]:checked::after {
       content: "✓";
       color: var(--paid);
@@ -202,14 +202,13 @@
       left: 3px;
       font-weight: 800;
       line-height: 1;
-      transform: translateZ(0);           /* helps some mobile browsers render pseudo element crisply */
+      transform: translateZ(0);
       -webkit-font-smoothing: antialiased;
       -moz-osx-font-smoothing: grayscale;
     }
-    /* Keep visible when disabled (for viewers) */
     input[type="checkbox"]:disabled {
       cursor: default;
-      opacity: 1;
+      opacity: 1; /* keep visible when disabled */
     }
 
     .note {
@@ -237,6 +236,7 @@
       .card h2 { font-size: 18px; }
       button { font-size: 13px; padding: 8px 10px; }
       #unlockBox input { min-width: 0; width: 100%; max-width: 300px; }
+      td.center-col, th.center-col { width: 130px; } /* a bit tighter on tiny screens */
     }
   </style>
 </head>
