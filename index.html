@@ -73,7 +73,6 @@
       font-weight: 600;
     }
 
-    /* Align team names left, checkboxes centered */
     th.team-col, td.team-col {
       text-align: left;
     }
@@ -123,6 +122,18 @@
     .saved.show {
       opacity: 1;
     }
+
+    #unlockBox {
+      margin-bottom: 12px;
+      text-align: center;
+    }
+    #unlockBox input {
+      padding: 6px;
+      border-radius: 6px;
+      border: 1px solid var(--border);
+      background: #222;
+      color: var(--fg);
+    }
   </style>
 </head>
 <body>
@@ -130,9 +141,15 @@
     <h1>sweatpants on Sunday fantasy football league</h1>
     <div class="sub">$5 weekly buy in with $70/week payout</div>
 
-    <!-- Dues -->
     <section class="card">
       <h2>Dues Tracker</h2>
+
+      <!-- Unlock section -->
+      <div id="unlockBox">
+        <input type="password" id="passwordInput" placeholder="Enter password to edit">
+        <button id="unlockBtn">Unlock</button>
+      </div>
+
       <div class="toolbar">
         <div>
           <button id="prevWeek" aria-label="Previous week">&larr;</button>
@@ -160,14 +177,10 @@
   </div>
 
   <script>
-    // === Config ===
-    const TEAMS = [
-      "Rob","Matt","Len","Gup","Scott","Adam",
-      "John","Smalls","Steve","Pete","Mike","PJ"
-    ];
-    const MAX_WEEKS = 14; // adjust if needed
+    const TEAMS = ["Rob","Matt","Len","Gup","Scott","Adam","John","Smalls","Steve","Pete","Mike","PJ"];
+    const MAX_WEEKS = 14;
+    const PASSWORD = "football123"; // 🔑 change this to your own secret password
 
-    // === Storage helpers ===
     const key = (s) => "sweatpants:"+s;
     const save = (k,v) => localStorage.setItem(k, JSON.stringify(v));
     const load = (k,f) => {
@@ -182,25 +195,17 @@
       toast._t = setTimeout(()=>el.classList.remove('show'), 900);
     }
 
-    // === Dues state ===
     let week = load(key("week"), 1);
+    function getDues(){ return load(key("dues"), { overall: {}, weeks: {} }); }
+    function setDues(state){ save(key("dues"), state); toast(); }
 
-    function getDues(){
-      return load(key("dues"), { overall: {}, weeks: {} });
-    }
-    function setDues(state){
-      save(key("dues"), state);
-      toast();
-    }
+    let canEdit = false;
 
     function renderDues(){
       const state = getDues();
-
-      // Update labels
       document.getElementById("currentWeekLabel").innerText = "Week " + week;
       document.getElementById("weekPaidHeader").innerText = "Week " + week + " Paid";
 
-      // Build table
       const tbody = document.querySelector("#duesTable tbody");
       tbody.innerHTML = "";
 
@@ -217,12 +222,20 @@
         `;
         tbody.appendChild(tr);
 
-        // Weekly toggle
-        document.getElementById("w"+i).onchange = (e) => {
+        const wBox = document.getElementById("w"+i);
+        const oBox = document.getElementById("o"+i);
+
+        if (!canEdit) {
+          wBox.disabled = true;
+          oBox.disabled = true;
+        }
+
+        wBox.onchange = (e) => {
+          if (!canEdit) return;
           const s = getDues();
           s.weeks[week] = s.weeks[week] || {};
           if (s.overall?.[team]) {
-            e.target.checked = true; // keep locked checked
+            e.target.checked = true;
             toast();
             return;
           }
@@ -230,15 +243,13 @@
           setDues(s);
         };
 
-        // Overall toggle
-        document.getElementById("o"+i).onchange = (e) => {
+        oBox.onchange = (e) => {
+          if (!canEdit) return;
           const s = getDues();
           s.overall = s.overall || {};
           s.overall[team] = e.target.checked;
 
           if (e.target.checked) {
-            // Mark all weeks as paid
-            s.weeks = s.weeks || {};
             for (let w = 1; w <= MAX_WEEKS; w++) {
               s.weeks[w] = s.weeks[w] || {};
               s.weeks[w][team] = true;
@@ -251,31 +262,25 @@
     }
 
     // Week navigation
-    document.getElementById("prevWeek").onclick = () => {
-      week = Math.max(1, week - 1);
-      save(key("week"), week);
-      renderDues();
-    };
-    document.getElementById("nextWeek").onclick = () => {
-      week = Math.min(MAX_WEEKS, week + 1);
-      save(key("week"), week);
-      renderDues();
-    };
+    document.getElementById("prevWeek").onclick = () => { week = Math.max(1, week - 1); save(key("week"), week); renderDues(); };
+    document.getElementById("nextWeek").onclick = () => { week = Math.min(MAX_WEEKS, week + 1); save(key("week"), week); renderDues(); };
 
     // Clear actions
-    document.getElementById("clearThisWeek").onclick = () => {
-      const s = getDues();
-      s.weeks[week] = {};
-      setDues(s);
-      renderDues();
-    };
-    document.getElementById("clearAllDues").onclick = () => {
-      if (!confirm("Clear ALL dues (weekly + year)?")) return;
-      setDues({ overall: {}, weeks: {} });
-      renderDues();
+    document.getElementById("clearThisWeek").onclick = () => { if (!canEdit) return; const s = getDues(); s.weeks[week] = {}; setDues(s); renderDues(); };
+    document.getElementById("clearAllDues").onclick = () => { if (!canEdit) return; if (!confirm("Clear ALL dues?")) return; setDues({ overall: {}, weeks: {} }); renderDues(); };
+
+    // Unlock button
+    document.getElementById("unlockBtn").onclick = () => {
+      const input = document.getElementById("passwordInput").value;
+      if (input === PASSWORD) {
+        canEdit = true;
+        renderDues();
+        alert("Unlocked. You can now edit.");
+      } else {
+        alert("Wrong password!");
+      }
     };
 
-    // Init
     renderDues();
   </script>
 </body>
