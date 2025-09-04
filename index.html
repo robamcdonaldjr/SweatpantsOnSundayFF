@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Sweatpants on Sunday Fantasy Football League</title>
+  <style>
+    :root {
+      --bg: #000;
+      --fg: #fff;
+      --muted: #bdbdbd;
+      --accent: #e0e0e0;
+      --card: #111;
+      --border: #222;
+      --focus: #6ee7ff;
+    }
+
+    html, body {
+      background: var(--bg);
+      color: var(--fg);
+      margin: 0;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+      line-height: 1.4;
+    }
+
+    .wrap {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 24px;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 24px;
+    }
+
+    h1 {
+      font-size: clamp(28px, 6vw, 48px);
+      margin: 0 0 6px;
+    }
+
+    .sub {
+      font-size: clamp(14px, 3.2vw, 18px);
+      color: var(--muted);
+    }
+
+    .grid {
+      display: grid;
+      gap: 16px;
+    }
+
+    @media (min-width: 840px) {
+      .grid {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 16px;
+    }
+
+    .card h2 {
+      margin: 0 0 12px;
+      font-size: 20px;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 8px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 15px;
+    }
+    th, td {
+      border-bottom: 1px solid var(--border);
+      padding: 10px 8px;
+      text-align: left;
+    }
+    th {
+      color: var(--accent);
+      font-weight: 600;
+    }
+
+    .check {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 14px;
+    }
+    input[type="checkbox"] {
+      width: 22px;
+      height: 22px;
+      accent-color: #fff;
+      cursor: pointer;
+    }
+
+    .toolbar {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 10px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    button {
+      background: transparent;
+      color: var(--fg);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 6px 12px;
+      cursor: pointer;
+    }
+
+    .note {
+      margin-top: 6px;
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    .saved {
+      font-size: 13px;
+      color: var(--muted);
+      opacity: 0;
+      transition: opacity .2s ease;
+    }
+    .saved.show {
+      opacity: 1;
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <h1>sweatpants on Sunday fantasy football league</h1>
+      <div class="sub">stats and dues</div>
+    </header>
+
+    <main class="grid">
+      <!-- Stats -->
+      <section class="card">
+        <h2>Stats</h2>
+        <div class="toolbar">
+          <span>Edit numbers right in the file for now.</span>
+          <button id="resetStatsBtn">Reset sample</button>
+        </div>
+        <table id="statsTable">
+          <thead>
+            <tr><th>Team</th><th>W</th><th>L</th><th>PF</th><th>PA</th></tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+        <p class="note">PF = Points For, PA = Points Against.</p>
+      </section>
+
+      <!-- Dues -->
+      <section class="card">
+        <h2>Dues</h2>
+        <div class="toolbar">
+          <div>
+            <button id="prevWeek">&larr;</button>
+            <span id="currentWeekLabel">Week 1</span>
+            <button id="nextWeek">&rarr;</button>
+          </div>
+          <div>
+            <button id="clearThisWeek">Clear week</button>
+            <button id="clearAllDues">Clear all</button>
+          </div>
+        </div>
+        <table id="duesTable">
+          <thead>
+            <tr><th>Team</th><th>Weekly</th><th>Overall</th></tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+        <p class="note">Check off when paid. Saves automatically.</p>
+        <div id="saveToast" class="saved">Saved ✔</div>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    const TEAMS = [
+      "McNuggets","The Bye Week Bandits","Fourth & Lynches",
+      "Brady Bunch","Dalvin & the Chipmunks","Golladay Inn Express",
+      "Run CMC","Mahomes Alone","Hurts So Good","Kupp Runneth Over"
+    ];
+    const SAMPLE_STATS = TEAMS.map((t,i)=>({team:t,w:i%2, l:1, pf:100+i*5, pa:90+i*7}));
+
+    const key=(s)=>"sweatpants:"+s;
+    const save=(k,v)=>localStorage.setItem(k,JSON.stringify(v));
+    const load=(k,f)=>JSON.parse(localStorage.getItem(k)||null)||f;
+
+    function toast(){let el=document.getElementById('saveToast');el.classList.add('show');setTimeout(()=>el.classList.remove('show'),900)}
+
+    // Stats
+    function renderStats(){
+      const stats=load(key("stats"),SAMPLE_STATS);
+      const tbody=document.querySelector("#statsTable tbody");
+      tbody.innerHTML="";
+      stats.forEach(r=>{
+        tbody.innerHTML+=`<tr><td>${r.team}</td><td>${r.w}</td><td>${r.l}</td><td>${r.pf}</td><td>${r.pa}</td></tr>`;
+      });
+    }
+    document.getElementById("resetStatsBtn").onclick=()=>{save(key("stats"),SAMPLE_STATS);renderStats();toast()};
+
+    // Dues
+    let week=load(key("week"),1);
+    function getDues(){return load(key("dues"),{overall:{},weeks:{}})}
+    function setDues(s){save(key("dues"),s);toast()}
+    function renderDues(){
+      const state=getDues();document.getElementById("currentWeekLabel").innerText="Week "+week;
+      const tbody=document.querySelector("#duesTable tbody");tbody.innerHTML="";
+      TEAMS.forEach((t,i)=>{
+        const wp=!!(state.weeks?.[week]?.[t]), op=!!state.overall?.[t];
+        tbody.innerHTML+=`
+        <tr>
+          <td>${t}</td>
+          <td><input type="checkbox" id="w${i}" ${wp?"checked":""}></td>
+          <td><input type="checkbox" id="o${i}" ${op?"checked":""}></td>
+        </tr>`;
+      });
+      TEAMS.forEach((t,i)=>{
+        document.getElementById("w"+i).onchange=(e)=>{let s=getDues();s.weeks[week]=s.weeks[week]||{};s.weeks[week][t]=e.target.checked;setDues(s)}
+        document.getElementById("o"+i).onchange=(e)=>{let s=getDues();s.overall[t]=e.target.checked;setDues(s)}
+      })
+    }
+    document.getElementById("prevWeek").onclick=()=>{week=Math.max(1,week-1);save(key("week"),week);renderDues()}
+    document.getElementById("nextWeek").onclick=()=>{week=Math.min(14,week+1);save(key("week"),week);renderDues()}
+    document.getElementById("clearThisWeek").onclick=()=>{let s=getDues();s.weeks[week]={};setDues(s);renderDues()}
+    document.getElementById("clearAllDues").onclick=()=>{if(confirm("Clear ALL dues?")){setDues({overall:{},weeks:{}});renderDues()}}
+
+    // Init
+    if(!localStorage.getItem(key("stats")))save(key("stats"),SAMPLE_STATS);
+    renderStats();renderDues();
+  </script>
+</body>
+</html>
