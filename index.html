@@ -16,107 +16,75 @@
       --paid: #00ff00; /* bright green */
     }
 
+    /* Base layout */
     html, body {
       background: var(--bg);
       color: var(--fg);
       margin: 0;
-      height: 100%;
+      padding: 0;
       font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      text-align: center;
+      line-height: 1.45;
+      -webkit-text-size-adjust: 100%;
     }
 
     .wrap {
-      max-width: 800px;
-      width: 100%;
-      padding: 20px;
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 16px;
     }
 
+    /* Top texts */
     .warning {
-      font-size: clamp(13px, 3vw, 16px);
+      font-size: 16px;
       color: var(--muted);
-      margin-bottom: 6px;
+      margin: 8px 0 6px;
       text-align: center;
+      padding: 0 8px;
+      word-break: break-word;
     }
 
     .sub {
-      font-size: clamp(14px, 3.2vw, 18px);
+      font-size: 17px;
       color: var(--muted);
-      margin-bottom: 20px;
+      margin: 0 0 16px;
       text-align: center;
+      padding: 0 8px;
+      word-break: break-word;
     }
 
+    /* Card */
     .card {
       background: var(--card);
       border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 16px;
-      text-align: center;
+      border-radius: 14px;
+      padding: 14px;
     }
 
     .card h2 {
       margin: 0 0 12px;
-      font-size: 22px;
-      font-weight: 600;
-    }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: 15px;
-    }
-    th, td {
-      border-bottom: 1px solid var(--border);
-      padding: 10px 8px;
-    }
-    th {
-      color: var(--accent);
-      font-weight: 600;
-    }
-
-    th.team-col, td.team-col {
-      text-align: left;
-    }
-    th.center-col, td.center-col {
+      font-size: 20px;
+      font-weight: 700;
       text-align: center;
     }
 
-    /* Bright green checkmarks always */
-    input[type="checkbox"] {
-      width: 22px;
-      height: 22px;
-      appearance: none;
-      -webkit-appearance: none;
-      background: #222;
-      border: 2px solid var(--border);
-      border-radius: 4px;
-      cursor: pointer;
-      position: relative;
-    }
-
-    input[type="checkbox"]:checked::after {
-      content: "✔";
-      color: var(--paid);
-      font-size: 18px;
-      position: absolute;
-      top: -2px;
-      left: 3px;
-      font-weight: bold;
-    }
-
-    input[type="checkbox"]:disabled {
-      cursor: default;
-      opacity: 1; /* keep visible when disabled */
-    }
-
+    /* Toolbar */
     .toolbar {
       display: flex;
-      justify-content: space-between;
-      margin-bottom: 10px;
+      flex-wrap: wrap;
+      gap: 10px 12px;
+      justify-content: center;
+      align-items: center;
+      margin-bottom: 12px;
       color: var(--muted);
       font-size: 14px;
+      text-align: center;
+    }
+    .toolbar .group {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      justify-content: center;
     }
 
     button {
@@ -124,15 +92,103 @@
       color: var(--fg);
       border: 1px solid var(--border);
       border-radius: 10px;
-      padding: 6px 12px;
+      padding: 8px 12px;
       cursor: pointer;
+      font-size: 14px;
+      min-height: 40px; /* good touch target */
+    }
+    button:focus-visible, input:focus-visible {
+      outline: 2px solid var(--focus);
+      outline-offset: 2px;
+    }
+
+    /* Password row */
+    #unlockBox {
+      margin: 8px 0 14px;
+      text-align: center;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      justify-content: center;
+    }
+    #unlockBox input {
+      padding: 8px 10px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: #222;
+      color: var(--fg);
+      min-width: 210px;
+      height: 40px;
+    }
+
+    /* Table wrapper (mobile scroll if needed) */
+    .table-wrap {
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      border-radius: 10px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 15px;
+      min-width: 520px; /* prevents squish on tiny screens; allows horizontal scroll */
+    }
+    th, td {
+      border-bottom: 1px solid var(--border);
+      padding: 12px 10px;
+      white-space: nowrap;
+    }
+    th {
+      color: var(--accent);
+      font-weight: 600;
+      text-align: center;
+    }
+    th.team-col, td.team-col {
+      text-align: left;
+      width: 60%;
+      white-space: normal;
+      word-break: break-word;
+    }
+    td.center-col, th.center-col {
+      text-align: center;
+      width: 20%;
+    }
+
+    /* Bright green checkmarks always */
+    input[type="checkbox"] {
+      width: 24px;
+      height: 24px;
+      appearance: none;
+      -webkit-appearance: none;
+      background: #222;
+      border: 2px solid var(--border);
+      border-radius: 5px;
+      cursor: pointer;
+      position: relative;
+      vertical-align: middle;
+    }
+    input[type="checkbox"]:checked::after {
+      content: "✔";
+      color: var(--paid);
+      font-size: 18px;
+      position: absolute;
+      top: -2px;
+      left: 3px;
+      font-weight: 800;
+      line-height: 1;
+    }
+    input[type="checkbox"]:disabled {
+      cursor: default;
+      opacity: 1; /* keep visible when disabled */
     }
 
     .note {
-      margin-top: 6px;
+      margin-top: 8px;
       font-size: 13px;
       color: var(--muted);
       text-align: center;
+      padding: 0 6px;
     }
 
     .saved {
@@ -141,22 +197,17 @@
       opacity: 0;
       transition: opacity .2s ease;
       text-align: center;
-      margin-top: 6px;
+      margin-top: 8px;
     }
-    .saved.show {
-      opacity: 1;
-    }
+    .saved.show { opacity: 1; }
 
-    #unlockBox {
-      margin-bottom: 12px;
-      text-align: center;
-    }
-    #unlockBox input {
-      padding: 6px;
-      border-radius: 6px;
-      border: 1px solid var(--border);
-      background: #222;
-      color: var(--fg);
+    /* Mobile-specific tweaks */
+    @media (max-width: 520px) {
+      .sub { font-size: 16px; }
+      .warning { font-size: 15px; }
+      .card h2 { font-size: 18px; }
+      button { font-size: 13px; padding: 8px 10px; }
+      #unlockBox input { min-width: 0; width: 100%; max-width: 300px; }
     }
   </style>
 </head>
@@ -175,28 +226,32 @@
       </div>
 
       <div class="toolbar">
-        <div>
+        <div class="group">
           <button id="prevWeek" aria-label="Previous week">&larr;</button>
-          <span id="currentWeekLabel">Week 1</span>
+          <span id="currentWeekLabel" aria-live="polite">Week 1</span>
           <button id="nextWeek" aria-label="Next week">&rarr;</button>
         </div>
-        <div>
+        <div class="group">
           <button id="clearThisWeek">Clear week</button>
           <button id="clearAllDues">Clear all</button>
         </div>
       </div>
-      <table id="duesTable">
-        <thead>
-          <tr>
-            <th class="team-col">Team</th>
-            <th class="center-col" id="weekPaidHeader">Week 1 Paid</th>
-            <th class="center-col">Paid for the Year</th>
-          </tr>
-        </thead>
-        <tbody></tbody>
-      </table>
+
+      <div class="table-wrap">
+        <table id="duesTable">
+          <thead>
+            <tr>
+              <th class="team-col">Team</th>
+              <th class="center-col" id="weekPaidHeader">Week 1 Paid</th>
+              <th class="center-col">Paid for the Year</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+
       <p class="note">If “Paid for the Year” is checked, all weeks count as paid.</p>
-      <div id="saveToast" class="saved">Saved ✔</div>
+      <div id="saveToast" class="saved" role="status" aria-live="polite">Saved ✔</div>
     </section>
   </div>
 
@@ -227,8 +282,8 @@
 
     function renderDues(){
       const state = getDues();
-      document.getElementById("currentWeekLabel").innerText = "Week " + week;
-      document.getElementById("weekPaidHeader").innerText = "Week " + week + " Paid";
+      document.getElementById("currentWeekLabel").textContent = "Week " + week;
+      document.getElementById("weekPaidHeader").textContent = "Week " + week + " Paid";
 
       const tbody = document.querySelector("#duesTable tbody");
       tbody.innerHTML = "";
@@ -259,7 +314,7 @@
           const s = getDues();
           s.weeks[week] = s.weeks[week] || {};
           if (s.overall?.[team]) {
-            e.target.checked = true;
+            e.target.checked = true; // yearly paid locks week paid
             toast();
             return;
           }
@@ -274,22 +329,43 @@
           s.overall[team] = e.target.checked;
 
           if (e.target.checked) {
+            // mark all weeks paid
+            s.weeks = s.weeks || {};
             for (let w = 1; w <= MAX_WEEKS; w++) {
               s.weeks[w] = s.weeks[w] || {};
               s.weeks[w][team] = true;
             }
           }
           setDues(s);
-          renderDues();
+          renderDues(); // reflect override immediately
         };
       });
     }
 
-    document.getElementById("prevWeek").onclick = () => { week = Math.max(1, week - 1); save(key("week"), week); renderDues(); };
-    document.getElementById("nextWeek").onclick = () => { week = Math.min(MAX_WEEKS, week + 1); save(key("week"), week); renderDues(); };
+    document.getElementById("prevWeek").onclick = () => {
+      week = Math.max(1, week - 1);
+      save(key("week"), week);
+      renderDues();
+    };
+    document.getElementById("nextWeek").onclick = () => {
+      week = Math.min(MAX_WEEKS, week + 1);
+      save(key("week"), week);
+      renderDues();
+    };
 
-    document.getElementById("clearThisWeek").onclick = () => { if (!canEdit) return; const s = getDues(); s.weeks[week] = {}; setDues(s); renderDues(); };
-    document.getElementById("clearAllDues").onclick = () => { if (!canEdit) return; if (!confirm("Clear ALL dues?")) return; setDues({ overall: {}, weeks: {} }); renderDues(); };
+    document.getElementById("clearThisWeek").onclick = () => {
+      if (!canEdit) return;
+      const s = getDues();
+      s.weeks[week] = {};
+      setDues(s);
+      renderDues();
+    };
+    document.getElementById("clearAllDues").onclick = () => {
+      if (!canEdit) return;
+      if (!confirm("Clear ALL dues (weekly + year)?")) return;
+      setDues({ overall: {}, weeks: {} });
+      renderDues();
+    };
 
     document.getElementById("unlockBtn").onclick = () => {
       const input = document.getElementById("passwordInput").value;
@@ -306,4 +382,3 @@
   </script>
 </body>
 </html>
-
