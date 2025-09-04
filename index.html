@@ -36,13 +36,22 @@
 
     h1 {
       font-size: clamp(28px, 6vw, 48px);
-      margin: 0 0 6px;
+      margin: 0 0 10px;
+      text-align: center;
     }
 
     .sub {
       font-size: clamp(14px, 3.2vw, 18px);
       color: var(--muted);
+      margin-bottom: 6px;
+      text-align: center;
+    }
+
+    .warning {
+      font-size: clamp(13px, 3vw, 16px);
+      color: var(--muted);
       margin-bottom: 20px;
+      text-align: center;
     }
 
     .card {
@@ -81,7 +90,7 @@
       text-align: center;
     }
 
-    /* Force green checkmarks always */
+    /* Bright green checkmarks always */
     input[type="checkbox"] {
       width: 22px;
       height: 22px;
@@ -160,8 +169,9 @@
 </head>
 <body>
   <div class="wrap">
-    <h1>sweatpants on Sunday fantasy football league</h1>
+    <h1>Sweatpants on Sunday Fantasy Football League</h1>
     <div class="sub">$5 weekly buy in with $70/week payout</div>
+    <div class="warning">If dues are not paid by the Tuesday after the last game of the week every week, you will get spammed.</div>
 
     <section class="card">
       <h2>Dues Tracker</h2>
