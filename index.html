@@ -15,6 +15,7 @@
       --focus: #6ee7ff;
       --paid: #00ff00; /* bright green */
       --sticky-shadow: rgba(0,0,0,0.35);
+      --venmo: #3D95CE; /* Venmo brand-ish blue */
     }
 
     /* Base layout */
@@ -98,7 +99,7 @@
       font-size: 14px;
       min-height: 40px; /* good touch target */
     }
-    button:focus-visible, input:focus-visible {
+    button:focus-visible, input:focus-visible, a:focus-visible {
       outline: 2px solid var(--focus);
       outline-offset: 2px;
     }
@@ -134,8 +135,8 @@
       width: 100%;
       border-collapse: collapse;
       font-size: 15px;
-      min-width: 420px; /* slightly smaller so you scroll less */
-      table-layout: auto; /* let columns size to content */
+      min-width: 560px; /* room for Team + Pay + 2 check cols */
+      table-layout: auto;
     }
     th, td {
       border-bottom: 1px solid var(--border);
@@ -158,25 +159,52 @@
       box-shadow: 0 2px 0 var(--border); /* faint rule under header */
     }
 
-    /* Sticky first column (names) — ONLY as wide as the name */
+    /* Sticky first column (names) — shrink to content */
     th.team-col, td.team-col {
       text-align: left;
-      width: 1%;                 /* shrink-to-fit */
-      max-width: max-content;    /* cap to content width */
-      white-space: nowrap;       /* no wrapping => no extra height/width */
+      width: 1%;
+      max-width: max-content;
+      white-space: nowrap;
       position: sticky;
       left: 0;
       z-index: 2;
       background: var(--card);
       box-shadow: 4px 0 6px -4px var(--sticky-shadow);
-      padding-right: 14px;       /* small gutter next to sticky edge */
+      padding-right: 14px;
     }
     thead th.team-col { z-index: 5; }
+
+    /* Pay (Venmo) column */
+    th.pay-col, td.pay-col {
+      text-align: center;
+      width: 90px; /* compact but tappable */
+    }
+    .venmo-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: #1a1a1a;
+      text-decoration: none;
+    }
+    .venmo-btn:hover { background: #222; }
+    .venmo-icon {
+      width: 20px;
+      height: 20px;
+      fill: var(--venmo);
+      display: block;
+    }
+    .venmo-btn.disabled {
+      opacity: 0.35;
+      pointer-events: none;
+    }
 
     /* Center the checkbox columns */
     td.center-col, th.center-col {
       text-align: center;
-      /* give them a predictable width so the scroll distance is minimal */
       width: 150px;
     }
 
@@ -236,7 +264,10 @@
       .card h2 { font-size: 18px; }
       button { font-size: 13px; padding: 8px 10px; }
       #unlockBox input { min-width: 0; width: 100%; max-width: 300px; }
-      td.center-col, th.center-col { width: 130px; } /* a bit tighter on tiny screens */
+      td.center-col, th.center-col { width: 130px; }
+      th.pay-col, td.pay-col { width: 76px; }
+      .venmo-btn { width: 34px; height: 34px; }
+      .venmo-icon { width: 18px; height: 18px; }
     }
   </style>
 </head>
@@ -271,6 +302,7 @@
           <thead>
             <tr>
               <th class="team-col">Team</th>
+              <th class="pay-col">Pay</th>
               <th class="center-col" id="weekPaidHeader">Week 1 Paid</th>
               <th class="center-col">Paid for the Year</th>
             </tr>
@@ -288,6 +320,31 @@
     const TEAMS = ["Rob","Matt","Len","Gup","Scott","Adam","John","Smalls","Steve","Pete","Mike","PJ"];
     const MAX_WEEKS = 14;
     const PASSWORD = "football123"; // change this
+
+    // 👉 Fill these in with each person's Venmo handle (no @)
+    const VENMO_HANDLES = {
+      "Rob":    "robamcdonaldjr",  // e.g., "rob_smith"
+      "Matt":   "matt-mcdonald8",
+      "Len":    "leonard-kelloway",
+      "Gup":    "brendan-guptill",
+      "Scott":  "scott-fiore-1",
+      "Adam":   "adam-chambers-4",
+      "John":   "N/A",
+      "Smalls": "smallz4891",
+      "Steve":  "steven-boccelli",
+      "Pete":   "peter-olson-14",
+      "Mike":   "mike-chakoutis",
+      "PJ":     "patrisox47"
+    };
+
+    // Build a Venmo profile/pay URL that should open the app on phones (or web)
+    function venmoUrl(handle) {
+      if (!handle) return null;
+      // Profile URL works well across platforms; app usually intercepts
+      return `https://venmo.com/u/${encodeURIComponent(handle)}`;
+      // Alternative app-first deep link (less universally supported):
+      // return `venmo://users/${encodeURIComponent(handle)}`;
+    }
 
     const key = (s) => "sweatpants:"+s;
     const save = (k,v) => localStorage.setItem(k, JSON.stringify(v));
@@ -309,6 +366,15 @@
 
     let canEdit = false;
 
+    function venmoButtonSvg() {
+      // Simple "V" glyph in SVG in Venmo-style blue
+      return `
+        <svg class="venmo-icon" viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M5 4h6.5c2.2 0 3.7 1.2 3.7 3.5 0 4.1-3.7 8.9-6.4 12.5H5.8l1.7-6.6c-.5.1-1 .1-1.5.1C4 13.5 3 12.2 3 10.4 3 7.6 4.6 6 7.3 6H9l-.7 2.7h1.9L12 4H5z" />
+        </svg>
+      `;
+    }
+
     function renderDues(){
       const state = getDues();
       document.getElementById("currentWeekLabel").textContent = "Week " + week;
@@ -322,9 +388,15 @@
         const weeklyPaidRaw = !!(state.weeks?.[week]?.[team]);
         const weeklyPaidEffective = overallPaid || weeklyPaidRaw;
 
+        const handle = VENMO_HANDLES[team];
+        const url = venmoUrl(handle);
+
         const tr = document.createElement("tr");
         tr.innerHTML = `
           <td class="team-col">${team}</td>
+          <td class="pay-col">
+            ${url ? `<a class="venmo-btn" href="${url}" target="_blank" rel="noopener noreferrer" aria-label="Pay ${team} on Venmo">${venmoButtonSvg()}</a>` : `<a class="venmo-btn disabled" aria-label="Venmo handle not set">${venmoButtonSvg()}</a>`}
+          </td>
           <td class="center-col"><input type="checkbox" id="w${i}" ${weeklyPaidEffective ? "checked" : ""}></td>
           <td class="center-col"><input type="checkbox" id="o${i}" ${overallPaid ? "checked" : ""}></td>
         `;
