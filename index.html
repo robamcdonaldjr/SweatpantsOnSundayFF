@@ -75,12 +75,6 @@
       font-weight: 600;
     }
 
-    .check {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      font-size: 14px;
-    }
     input[type="checkbox"] {
       width: 22px;
       height: 22px;
@@ -128,7 +122,7 @@
 <body>
   <div class="wrap">
     <h1>sweatpants on Sunday fantasy football league</h1>
-    <div class="sub">dues</div>
+    <div class="sub">$5 weekly buy in with $70/week payout</div>
 
     <!-- Dues -->
     <section class="card">
@@ -146,7 +140,11 @@
       </div>
       <table id="duesTable">
         <thead>
-          <tr><th>Team</th><th>Weekly</th><th>Overall</th></tr>
+          <tr>
+            <th>Team</th>
+            <th id="weekPaidHeader">Week 1 Paid</th>
+            <th>Paid for the Year</th>
+          </tr>
         </thead>
         <tbody></tbody>
       </table>
@@ -172,8 +170,12 @@
     function getDues(){return load(key("dues"),{overall:{},weeks:{}})}
     function setDues(s){save(key("dues"),s);toast()}
     function renderDues(){
-      const state=getDues();document.getElementById("currentWeekLabel").innerText="Week "+week;
-      const tbody=document.querySelector("#duesTable tbody");tbody.innerHTML="";
+      const state=getDues();
+      document.getElementById("currentWeekLabel").innerText="Week "+week;
+      document.getElementById("weekPaidHeader").innerText="Week "+week+" Paid";
+
+      const tbody=document.querySelector("#duesTable tbody");
+      tbody.innerHTML="";
       TEAMS.forEach((t,i)=>{
         const wp=!!(state.weeks?.[week]?.[t]), op=!!state.overall?.[t];
         tbody.innerHTML+=`
@@ -184,19 +186,44 @@
         </tr>`;
       });
       TEAMS.forEach((t,i)=>{
-        document.getElementById("w"+i).onchange=(e)=>{let s=getDues();s.weeks[week]=s.weeks[week]||{};s.weeks[week][t]=e.target.checked;setDues(s)}
-        document.getElementById("o"+i).onchange=(e)=>{let s=getDues();s.overall[t]=e.target.checked;setDues(s)}
+        document.getElementById("w"+i).onchange=(e)=>{
+          let s=getDues();
+          s.weeks[week]=s.weeks[week]||{};
+          s.weeks[week][t]=e.target.checked;
+          setDues(s);
+        }
+        document.getElementById("o"+i).onchange=(e)=>{
+          let s=getDues();
+          s.overall[t]=e.target.checked;
+          setDues(s);
+        }
       })
     }
-    document.getElementById("prevWeek").onclick=()=>{week=Math.max(1,week-1);save(key("week"),week);renderDues()}
-    document.getElementById("nextWeek").onclick=()=>{week=Math.min(14,week+1);save(key("week"),week);renderDues()}
-    document.getElementById("clearThisWeek").onclick=()=>{let s=getDues();s.weeks[week]={};setDues(s);renderDues()}
-    document.getElementById("clearAllDues").onclick=()=>{if(confirm("Clear ALL dues?")){setDues({overall:{},weeks:{}});renderDues()}}
+    document.getElementById("prevWeek").onclick=()=>{
+      week=Math.max(1,week-1);
+      save(key("week"),week);
+      renderDues();
+    }
+    document.getElementById("nextWeek").onclick=()=>{
+      week=Math.min(14,week+1);
+      save(key("week"),week);
+      renderDues();
+    }
+    document.getElementById("clearThisWeek").onclick=()=>{
+      let s=getDues();
+      s.weeks[week]={};
+      setDues(s);
+      renderDues();
+    }
+    document.getElementById("clearAllDues").onclick=()=>{
+      if(confirm("Clear ALL dues?")){
+        setDues({overall:{},weeks:{}});
+        renderDues();
+      }
+    }
 
     // Init
     renderDues();
   </script>
 </body>
 </html>
-
-
