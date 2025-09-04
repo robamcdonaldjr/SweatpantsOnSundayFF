@@ -19,19 +19,18 @@
       background: var(--bg);
       color: var(--fg);
       margin: 0;
+      height: 100%;
       font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
-      line-height: 1.4;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
     }
 
     .wrap {
-      max-width: 960px;
-      margin: 0 auto;
-      padding: 24px;
-    }
-
-    header {
-      text-align: center;
-      margin-bottom: 24px;
+      max-width: 800px;
+      width: 100%;
+      padding: 20px;
     }
 
     h1 {
@@ -42,17 +41,7 @@
     .sub {
       font-size: clamp(14px, 3.2vw, 18px);
       color: var(--muted);
-    }
-
-    .grid {
-      display: grid;
-      gap: 16px;
-    }
-
-    @media (min-width: 840px) {
-      .grid {
-        grid-template-columns: 1fr 1fr;
-      }
+      margin-bottom: 20px;
     }
 
     .card {
@@ -60,6 +49,7 @@
       border: 1px solid var(--border);
       border-radius: 12px;
       padding: 16px;
+      text-align: left;
     }
 
     .card h2 {
@@ -67,6 +57,7 @@
       font-size: 20px;
       border-bottom: 1px solid var(--border);
       padding-bottom: 8px;
+      text-align: center;
     }
 
     table {
@@ -118,6 +109,7 @@
       margin-top: 6px;
       font-size: 13px;
       color: var(--muted);
+      text-align: center;
     }
 
     .saved {
@@ -125,6 +117,8 @@
       color: var(--muted);
       opacity: 0;
       transition: opacity .2s ease;
+      text-align: center;
+      margin-top: 6px;
     }
     .saved.show {
       opacity: 1;
@@ -133,52 +127,32 @@
 </head>
 <body>
   <div class="wrap">
-    <header>
-      <h1>sweatpants on Sunday fantasy football league</h1>
-      <div class="sub">stats and dues</div>
-    </header>
+    <h1>sweatpants on Sunday fantasy football league</h1>
+    <div class="sub">dues</div>
 
-    <main class="grid">
-      <!-- Stats -->
-      <section class="card">
-        <h2>Stats</h2>
-        <div class="toolbar">
-          <span>Edit numbers right in the file for now.</span>
-          <button id="resetStatsBtn">Reset sample</button>
+    <!-- Dues -->
+    <section class="card">
+      <h2>Dues Tracker</h2>
+      <div class="toolbar">
+        <div>
+          <button id="prevWeek">&larr;</button>
+          <span id="currentWeekLabel">Week 1</span>
+          <button id="nextWeek">&rarr;</button>
         </div>
-        <table id="statsTable">
-          <thead>
-            <tr><th>Team</th><th>W</th><th>L</th><th>PF</th><th>PA</th></tr>
-          </thead>
-          <tbody></tbody>
-        </table>
-        <p class="note">PF = Points For, PA = Points Against.</p>
-      </section>
-
-      <!-- Dues -->
-      <section class="card">
-        <h2>Dues</h2>
-        <div class="toolbar">
-          <div>
-            <button id="prevWeek">&larr;</button>
-            <span id="currentWeekLabel">Week 1</span>
-            <button id="nextWeek">&rarr;</button>
-          </div>
-          <div>
-            <button id="clearThisWeek">Clear week</button>
-            <button id="clearAllDues">Clear all</button>
-          </div>
+        <div>
+          <button id="clearThisWeek">Clear week</button>
+          <button id="clearAllDues">Clear all</button>
         </div>
-        <table id="duesTable">
-          <thead>
-            <tr><th>Team</th><th>Weekly</th><th>Overall</th></tr>
-          </thead>
-          <tbody></tbody>
-        </table>
-        <p class="note">Check off when paid. Saves automatically.</p>
-        <div id="saveToast" class="saved">Saved ✔</div>
-      </section>
-    </main>
+      </div>
+      <table id="duesTable">
+        <thead>
+          <tr><th>Team</th><th>Weekly</th><th>Overall</th></tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+      <p class="note">Check off when paid. Saves automatically.</p>
+      <div id="saveToast" class="saved">Saved ✔</div>
+    </section>
   </div>
 
   <script>
@@ -187,24 +161,12 @@
       "Brady Bunch","Dalvin & the Chipmunks","Golladay Inn Express",
       "Run CMC","Mahomes Alone","Hurts So Good","Kupp Runneth Over"
     ];
-    const SAMPLE_STATS = TEAMS.map((t,i)=>({team:t,w:i%2, l:1, pf:100+i*5, pa:90+i*7}));
 
     const key=(s)=>"sweatpants:"+s;
     const save=(k,v)=>localStorage.setItem(k,JSON.stringify(v));
     const load=(k,f)=>JSON.parse(localStorage.getItem(k)||null)||f;
 
     function toast(){let el=document.getElementById('saveToast');el.classList.add('show');setTimeout(()=>el.classList.remove('show'),900)}
-
-    // Stats
-    function renderStats(){
-      const stats=load(key("stats"),SAMPLE_STATS);
-      const tbody=document.querySelector("#statsTable tbody");
-      tbody.innerHTML="";
-      stats.forEach(r=>{
-        tbody.innerHTML+=`<tr><td>${r.team}</td><td>${r.w}</td><td>${r.l}</td><td>${r.pf}</td><td>${r.pa}</td></tr>`;
-      });
-    }
-    document.getElementById("resetStatsBtn").onclick=()=>{save(key("stats"),SAMPLE_STATS);renderStats();toast()};
 
     // Dues
     let week=load(key("week"),1);
@@ -233,8 +195,8 @@
     document.getElementById("clearAllDues").onclick=()=>{if(confirm("Clear ALL dues?")){setDues({overall:{},weeks:{}});renderDues()}}
 
     // Init
-    if(!localStorage.getItem(key("stats")))save(key("stats"),SAMPLE_STATS);
-    renderStats();renderDues();
+    renderDues();
   </script>
 </body>
 </html>
+
