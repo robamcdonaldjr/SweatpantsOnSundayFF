@@ -129,9 +129,9 @@
       <h2>Dues Tracker</h2>
       <div class="toolbar">
         <div>
-          <button id="prevWeek">&larr;</button>
+          <button id="prevWeek" aria-label="Previous week">&larr;</button>
           <span id="currentWeekLabel">Week 1</span>
-          <button id="nextWeek">&rarr;</button>
+          <button id="nextWeek" aria-label="Next week">&rarr;</button>
         </div>
         <div>
           <button id="clearThisWeek">Clear week</button>
@@ -148,79 +148,128 @@
         </thead>
         <tbody></tbody>
       </table>
-      <p class="note">Check off when paid. Saves automatically.</p>
+      <p class="note">If “Paid for the Year” is checked, all weeks count as paid.</p>
       <div id="saveToast" class="saved">Saved ✔</div>
     </section>
   </div>
 
   <script>
+    // === Config ===
     const TEAMS = [
       "Rob","Matt","Len","Gup","Scott","Adam",
       "John","Smalls","Steve","Pete","Mike","PJ"
     ];
+    const MAX_WEEKS = 14; // adjust if you want more/less
 
-    const key=(s)=>"sweatpants:"+s;
-    const save=(k,v)=>localStorage.setItem(k,JSON.stringify(v));
-    const load=(k,f)=>JSON.parse(localStorage.getItem(k)||null)||f;
+    // === Storage helpers ===
+    const key = (s) => "sweatpants:"+s;
+    const save = (k,v) => localStorage.setItem(k, JSON.stringify(v));
+    const load = (k,f) => {
+      try { return JSON.parse(localStorage.getItem(k)) ?? f; }
+      catch { return f; }
+    };
 
-    function toast(){let el=document.getElementById('saveToast');el.classList.add('show');setTimeout(()=>el.classList.remove('show'),900)}
+    function toast(){
+      let el = document.getElementById('saveToast');
+      el.classList.add('show');
+      clearTimeout(toast._t);
+      toast._t = setTimeout(()=>el.classList.remove('show'), 900);
+    }
 
-    // Dues
-    let week=load(key("week"),1);
-    function getDues(){return load(key("dues"),{overall:{},weeks:{}})}
-    function setDues(s){save(key("dues"),s);toast()}
+    // === Dues state ===
+    let week = load(key("week"), 1);
+
+    function getDues(){
+      return load(key("dues"), { overall: {}, weeks: {} });
+    }
+    function setDues(state){
+      save(key("dues"), state);
+      toast();
+    }
+
     function renderDues(){
-      const state=getDues();
-      document.getElementById("currentWeekLabel").innerText="Week "+week;
-      document.getElementById("weekPaidHeader").innerText="Week "+week+" Paid";
+      const state = getDues();
 
-      const tbody=document.querySelector("#duesTable tbody");
-      tbody.innerHTML="";
-      TEAMS.forEach((t,i)=>{
-        const wp=!!(state.weeks?.[week]?.[t]), op=!!state.overall?.[t];
-        tbody.innerHTML+=`
-        <tr>
-          <td>${t}</td>
-          <td><input type="checkbox" id="w${i}" ${wp?"checked":""}></td>
-          <td><input type="checkbox" id="o${i}" ${op?"checked":""}></td>
-        </tr>`;
+      // Update labels
+      document.getElementById("currentWeekLabel").innerText = "Week " + week;
+      document.getElementById("weekPaidHeader").innerText = "Week " + week + " Paid";
+
+      // Build table
+      const tbody = document.querySelector("#duesTable tbody");
+      tbody.innerHTML = "";
+
+      TEAMS.forEach((team, i) => {
+        const overallPaid = !!state.overall?.[team];
+        const weeklyPaidRaw = !!(state.weeks?.[week]?.[team]);
+        const weeklyPaidEffective = overallPaid || weeklyPaidRaw; // <-- overall means paid every week
+
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td>${team}</td>
+          <td><input type="checkbox" id="w${i}" ${weeklyPaidEffective ? "checked" : ""}></td>
+          <td><input type="checkbox" id="o${i}" ${overallPaid ? "checked" : ""}></td>
+        `;
+        tbody.appendChild(tr);
+
+        // Weekly toggle: writes only the current week (doesn't affect other weeks)
+        document.getElementById("w"+i).onchange = (e) => {
+          const s = getDues();
+          s.weeks[week] = s.weeks[week] || {};
+          // If overall is paid, keep weekly checked (overall overrides). Let user uncheck only when overall is off.
+          if (s.overall?.[team]) {
+            e.target.checked = true; // lock to checked when overall is true
+            toast();
+            return;
+          }
+          s.weeks[week][team] = e.target.checked;
+          setDues(s);
+        };
+
+        // Overall toggle: when turning ON, mark every week as paid for that team
+        document.getElementById("o"+i).onchange = (e) => {
+          const s = getDues();
+          s.overall = s.overall || {};
+          s.overall[team] = e.target.checked;
+
+          if (e.target.checked) {
+            // Mark all weeks as paid
+            s.weeks = s.weeks || {};
+            for (let w = 1; w <= MAX_WEEKS; w++) {
+              s.weeks[w] = s.weeks[w] || {};
+              s.weeks[w][team] = true;
+            }
+          }
+          // If turning OFF, leave weekly checkboxes as-is (user can manage weeks individually)
+          setDues(s);
+          renderDues(); // re-render so the UI reflects overrides immediately
+        };
       });
-      TEAMS.forEach((t,i)=>{
-        document.getElementById("w"+i).onchange=(e)=>{
-          let s=getDues();
-          s.weeks[week]=s.weeks[week]||{};
-          s.weeks[week][t]=e.target.checked;
-          setDues(s);
-        }
-        document.getElementById("o"+i).onchange=(e)=>{
-          let s=getDues();
-          s.overall[t]=e.target.checked;
-          setDues(s);
-        }
-      })
     }
-    document.getElementById("prevWeek").onclick=()=>{
-      week=Math.max(1,week-1);
-      save(key("week"),week);
+
+    // Week navigation
+    document.getElementById("prevWeek").onclick = () => {
+      week = Math.max(1, week - 1);
+      save(key("week"), week);
       renderDues();
-    }
-    document.getElementById("nextWeek").onclick=()=>{
-      week=Math.min(14,week+1);
-      save(key("week"),week);
+    };
+    document.getElementById("nextWeek").onclick = () => {
+      week = Math.min(MAX_WEEKS, week + 1);
+      save(key("week"), week);
       renderDues();
-    }
-    document.getElementById("clearThisWeek").onclick=()=>{
-      let s=getDues();
-      s.weeks[week]={};
+    };
+
+    // Clear actions
+    document.getElementById("clearThisWeek").onclick = () => {
+      const s = getDues();
+      s.weeks[week] = {};
       setDues(s);
       renderDues();
-    }
-    document.getElementById("clearAllDues").onclick=()=>{
-      if(confirm("Clear ALL dues?")){
-        setDues({overall:{},weeks:{}});
-        renderDues();
-      }
-    }
+    };
+    document.getElementById("clearAllDues").onclick = () => {
+      if (!confirm("Clear ALL dues (weekly + year)?")) return;
+      setDues({ overall: {}, weeks: {} });
+      renderDues();
+    };
 
     // Init
     renderDues();
