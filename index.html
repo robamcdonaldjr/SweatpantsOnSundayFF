@@ -49,7 +49,7 @@
       border: 1px solid var(--border);
       border-radius: 12px;
       padding: 16px;
-      text-align: left;
+      text-align: center;
     }
 
     .card h2 {
@@ -57,7 +57,6 @@
       font-size: 20px;
       border-bottom: 1px solid var(--border);
       padding-bottom: 8px;
-      text-align: center;
     }
 
     table {
@@ -68,11 +67,18 @@
     th, td {
       border-bottom: 1px solid var(--border);
       padding: 10px 8px;
-      text-align: left;
     }
     th {
       color: var(--accent);
       font-weight: 600;
+    }
+
+    /* Align team names left, checkboxes centered */
+    th.team-col, td.team-col {
+      text-align: left;
+    }
+    th.center-col, td.center-col {
+      text-align: center;
     }
 
     input[type="checkbox"] {
@@ -141,9 +147,9 @@
       <table id="duesTable">
         <thead>
           <tr>
-            <th>Team</th>
-            <th id="weekPaidHeader">Week 1 Paid</th>
-            <th>Paid for the Year</th>
+            <th class="team-col">Team</th>
+            <th class="center-col" id="weekPaidHeader">Week 1 Paid</th>
+            <th class="center-col">Paid for the Year</th>
           </tr>
         </thead>
         <tbody></tbody>
@@ -159,7 +165,7 @@
       "Rob","Matt","Len","Gup","Scott","Adam",
       "John","Smalls","Steve","Pete","Mike","PJ"
     ];
-    const MAX_WEEKS = 14; // adjust if you want more/less
+    const MAX_WEEKS = 14; // adjust if needed
 
     // === Storage helpers ===
     const key = (s) => "sweatpants:"+s;
@@ -201,23 +207,22 @@
       TEAMS.forEach((team, i) => {
         const overallPaid = !!state.overall?.[team];
         const weeklyPaidRaw = !!(state.weeks?.[week]?.[team]);
-        const weeklyPaidEffective = overallPaid || weeklyPaidRaw; // <-- overall means paid every week
+        const weeklyPaidEffective = overallPaid || weeklyPaidRaw;
 
         const tr = document.createElement("tr");
         tr.innerHTML = `
-          <td>${team}</td>
-          <td><input type="checkbox" id="w${i}" ${weeklyPaidEffective ? "checked" : ""}></td>
-          <td><input type="checkbox" id="o${i}" ${overallPaid ? "checked" : ""}></td>
+          <td class="team-col">${team}</td>
+          <td class="center-col"><input type="checkbox" id="w${i}" ${weeklyPaidEffective ? "checked" : ""}></td>
+          <td class="center-col"><input type="checkbox" id="o${i}" ${overallPaid ? "checked" : ""}></td>
         `;
         tbody.appendChild(tr);
 
-        // Weekly toggle: writes only the current week (doesn't affect other weeks)
+        // Weekly toggle
         document.getElementById("w"+i).onchange = (e) => {
           const s = getDues();
           s.weeks[week] = s.weeks[week] || {};
-          // If overall is paid, keep weekly checked (overall overrides). Let user uncheck only when overall is off.
           if (s.overall?.[team]) {
-            e.target.checked = true; // lock to checked when overall is true
+            e.target.checked = true; // keep locked checked
             toast();
             return;
           }
@@ -225,7 +230,7 @@
           setDues(s);
         };
 
-        // Overall toggle: when turning ON, mark every week as paid for that team
+        // Overall toggle
         document.getElementById("o"+i).onchange = (e) => {
           const s = getDues();
           s.overall = s.overall || {};
@@ -239,9 +244,8 @@
               s.weeks[w][team] = true;
             }
           }
-          // If turning OFF, leave weekly checkboxes as-is (user can manage weeks individually)
           setDues(s);
-          renderDues(); // re-render so the UI reflects overrides immediately
+          renderDues();
         };
       });
     }
