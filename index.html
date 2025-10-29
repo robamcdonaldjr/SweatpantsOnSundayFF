@@ -9,76 +9,132 @@
   </head>
   <body class="bg-gray-900 text-white min-h-screen">
     <header class="p-4 text-center bg-gray-800 text-xl font-bold">Sweatpants on Sunday — League Hub</header>
-    <main class="max-w-5xl mx-auto p-6 space-y-8">
 
-      <!-- Teams Section -->
-      <section id="teams" class="bg-gray-800 p-6 rounded-xl">
-        <h2 class="text-2xl font-semibold mb-4">Teams</h2>
-        <div id="teamsGrid" class="grid sm:grid-cols-2 xl:grid-cols-3 gap-4">
-          <div class="card bg-gray-700 p-4 rounded-xl">
-            <h3 class="font-semibold">The McNuggets</h3>
-            <p class="text-gray-300 text-sm">Manager: Robert McDonald</p>
-          </div>
-          <div class="card bg-gray-700 p-4 rounded-xl">
-            <h3 class="font-semibold">Cooter Claws</h3>
-            <p class="text-gray-300 text-sm">Manager: Adam Chambers</p>
-          </div>
-          <div class="card bg-gray-700 p-4 rounded-xl">
-            <h3 class="font-semibold">The McAstericks</h3>
-            <p class="text-gray-300 text-sm">Manager: Matthew McDonald</p>
-          </div>
-          <div class="card bg-gray-700 p-4 rounded-xl">
-            <h3 class="font-semibold">You got a purdy mouth</h3>
-            <p class="text-gray-300 text-sm">Manager: Brendan Guptill <span class='text-yellow-400 ml-1'>🏆 2024 Champion</span></p>
-          </div>
-          <div class="card bg-gray-700 p-4 rounded-xl">
-            <h3 class="font-semibold">Hauk Tua is dead. Rob sucks</h3>
-            <p class="text-gray-300 text-sm">Manager: Mike Chakoutis</p>
-          </div>
-          <div class="card bg-gray-700 p-4 rounded-xl">
-            <h3 class="font-semibold">Toon Squad</h3>
-            <p class="text-gray-300 text-sm">Manager: John Chambers</p>
-          </div>
-          <div class="card bg-gray-700 p-4 rounded-xl">
-            <h3 class="font-semibold">LUCKY 22</h3>
-            <p class="text-gray-300 text-sm">Manager: Steven Boccelli</p>
-          </div>
-          <div class="card bg-gray-700 p-4 rounded-xl">
-            <h3 class="font-semibold">Jacking goff in laporta potty</h3>
-            <p class="text-gray-300 text-sm">Manager: Leonard Kelloway</p>
-          </div>
-          <div class="card bg-gray-700 p-4 rounded-xl">
-            <h3 class="font-semibold">Pugnacious Love</h3>
-            <p class="text-gray-300 text-sm">Manager: PJ Holey</p>
-          </div>
-          <div class="card bg-gray-700 p-4 rounded-xl">
-            <h3 class="font-semibold">Bad Boys</h3>
-            <p class="text-gray-300 text-sm">Manager: Scott Fiore</p>
-          </div>
-          <div class="card bg-gray-700 p-4 rounded-xl">
-            <h3 class="font-semibold">Check My Balls</h3>
-            <p class="text-gray-300 text-sm">Manager: Steven Small</p>
-          </div>
-          <div class="card bg-gray-700 p-4 rounded-xl">
-            <h3 class="font-semibold">Bill Croskey's Special Drink</h3>
-            <p class="text-gray-300 text-sm">Manager: Peter Olson</p>
-          </div>
+    <main class="max-w-6xl mx-auto p-6 space-y-8">
+      <!-- TOP ROW: Left column (Teams + Payouts), Right column (Trophy) -->
+      <div class="grid lg:grid-cols-3 gap-8">
+        <!-- Left: Teams + Payouts stacked -->
+        <div class="lg:col-span-2 space-y-8">
+          <!-- Teams Section -->
+          <section id="teams" class="bg-gray-800 p-6 rounded-xl">
+            <h2 class="text-2xl font-semibold mb-4">Teams</h2>
+            <div id="teamsGrid" class="grid sm:grid-cols-2 xl:grid-cols-3 gap-4">
+              <div class="card bg-gray-700 p-4 rounded-xl">
+                <h3 class="font-semibold">The McNuggets</h3>
+                <p class="text-gray-300 text-sm">Manager: Robert McDonald</p>
+              </div>
+              <div class="card bg-gray-700 p-4 rounded-xl">
+                <h3 class="font-semibold">Cooter Claws</h3>
+                <p class="text-gray-300 text-sm">Manager: Adam Chambers</p>
+              </div>
+              <div class="card bg-gray-700 p-4 rounded-xl">
+                <h3 class="font-semibold">The McAstericks</h3>
+                <p class="text-gray-300 text-sm">Manager: Matthew McDonald</p>
+              </div>
+              <div class="card bg-gray-700 p-4 rounded-xl">
+                <h3 class="font-semibold">You got a purdy mouth</h3>
+                <p class="text-gray-300 text-sm">Manager: Brendan Guptill <span class='text-yellow-400 ml-1'>🏆 2024 Champion</span></p>
+              </div>
+              <div class="card bg-gray-700 p-4 rounded-xl">
+                <h3 class="font-semibold">Hauk Tua is dead. Rob sucks</h3>
+                <p class="text-gray-300 text-sm">Manager: Mike Chakoutis</p>
+              </div>
+              <div class="card bg-gray-700 p-4 rounded-xl">
+                <h3 class="font-semibold">Toon Squad</h3>
+                <p class="text-gray-300 text-sm">Manager: John Chambers</p>
+              </div>
+              <div class="card bg-gray-700 p-4 rounded-xl">
+                <h3 class="font-semibold">LUCKY 22</h3>
+                <p class="text-gray-300 text-sm">Manager: Steven Boccelli</p>
+              </div>
+              <div class="card bg-gray-700 p-4 rounded-xl">
+                <h3 class="font-semibold">Jacking goff in laporta potty</h3>
+                <p class="text-gray-300 text-sm">Manager: Leonard Kelloway</p>
+              </div>
+              <div class="card bg-gray-700 p-4 rounded-xl">
+                <h3 class="font-semibold">Pugnacious Love</h3>
+                <p class="text-gray-300 text-sm">Manager: PJ Holey</p>
+              </div>
+              <div class="card bg-gray-700 p-4 rounded-xl">
+                <h3 class="font-semibold">Bad Boys</h3>
+                <p class="text-gray-300 text-sm">Manager: Scott Fiore</p>
+              </div>
+              <div class="card bg-gray-700 p-4 rounded-xl">
+                <h3 class="font-semibold">Check My Balls</h3>
+                <p class="text-gray-300 text-sm">Manager: Steven Small</p>
+              </div>
+              <div class="card bg-gray-700 p-4 rounded-xl">
+                <h3 class="font-semibold">Bill Croskey's Special Drink</h3>
+                <p class="text-gray-300 text-sm">Manager: Peter Olson</p>
+              </div>
+            </div>
+          </section>
+
+          <!-- Payouts Section -->
+          <section id="payouts" class="bg-gray-800 p-6 rounded-xl">
+            <h2 class="text-2xl font-semibold mb-4">Payouts</h2>
+            <p class="text-gray-300 text-sm mb-4">Each team pays a <span class='text-yellow-400 font-semibold'>$150 buy-in</span> at the start of the season. All funds go toward league prizes and are paid to the winners at the end of the season.</p>
+            <ul class="list-disc list-inside text-gray-300 space-y-1 mb-2">
+              <li>Champion: $600 (Playoff Winner)</li>
+              <li>Runner-up: $250 (Loses in Finals)</li>
+              <li>Regular Season Points Leader: $150 (Most PF after Week 14)</li>
+              <li>Weekly High Score: $20 (Paid each week)</li>
+              <li>Toilet Bowl Winner: $25 (Because comedy)</li>
+            </ul>
+          </section>
         </div>
-      </section>
 
-      <!-- Payouts Section -->
-      <section id="payouts" class="bg-gray-800 p-6 rounded-xl">
-        <h2 class="text-2xl font-semibold mb-4">Payouts</h2>
-        <p class="text-gray-300 text-sm mb-4">Each team pays a <span class='text-yellow-400 font-semibold'>$150 buy-in</span> at the start of the season. All funds go toward league prizes and are paid to the winners at the end of the season.</p>
-        <ul class="list-disc list-inside text-gray-300 space-y-1 mb-6">
-          <li>Champion: $600 (Playoff Winner)</li>
-          <li>Runner-up: $250 (Loses in Finals)</li>
-          <li>Regular Season Points Leader: $150 (Most PF after Week 14)</li>
-          <li>Weekly High Score: $20 (Paid each week)</li>
-          <li>Toilet Bowl Winner: $25 (Because comedy)</li>
-        </ul>
-      </section>
+        <!-- Right: Giant Trophy with Champions list -->
+        <aside class="bg-gradient-to-b from-yellow-500 via-yellow-400 to-yellow-600 rounded-xl p-0 overflow-hidden relative shadow-xl border border-yellow-300/40">
+          <!-- Trophy SVG background watermark -->
+          <svg viewBox="0 0 200 260" class="absolute inset-0 w-full h-full opacity-20">
+            <defs>
+              <linearGradient id="g" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#fff"/>
+                <stop offset="100%" stop-color="#000"/>
+              </linearGradient>
+            </defs>
+            <!-- cup -->
+            <path d="M30 40 h140 v40 c0 40-40 70-70 80 c-30-10-70-40-70-80z" fill="#000" fill-opacity="0.2"/>
+            <!-- stem & base -->
+            <rect x="90" y="160" width="20" height="20" fill="#000" fill-opacity="0.2"/>
+            <rect x="60" y="180" width="80" height="20" fill="#000" fill-opacity="0.2"/>
+            <rect x="40" y="200" width="120" height="28" fill="#000" fill-opacity="0.25"/>
+          </svg>
 
+          <div class="relative p-6">
+            <div class="flex items-center justify-between">
+              <h2 class="text-2xl font-extrabold drop-shadow">Champions</h2>
+              <span class="text-3xl">🏆</span>
+            </div>
+            <p class="text-yellow-950/90 text-sm mt-1">2010 at the bottom → 2026 at the top</p>
+            <div class="mt-4 bg-yellow-200/30 rounded-lg p-3 border border-yellow-300/50">
+              <!-- Champions list (top = 2026, bottom = 2010) -->
+              <ul class="text-yellow-900 text-sm leading-7 max-h-[70vh] overflow-auto pr-1">
+                <li><span class="font-semibold">2026:</span> —</li>
+                <li><span class="font-semibold">2025:</span> —</li>
+                <li><span class="font-semibold">2024:</span> Brendan Guptill</li>
+                <li><span class="font-semibold">2023:</span> PJ Holey</li>
+                <li><span class="font-semibold">2022:</span> —</li>
+                <li><span class="font-semibold">2021:</span> —</li>
+                <li><span class="font-semibold">2020:</span> —</li>
+                <li><span class="font-semibold">2019:</span> John Chambers</li>
+                <li><span class="font-semibold">2018:</span> —</li>
+                <li><span class="font-semibold">2017:</span> —</li>
+                <li><span class="font-semibold">2016:</span> —</li>
+                <li><span class="font-semibold">2015:</span> —</li>
+                <li><span class="font-semibold">2014:</span> —</li>
+                <li><span class="font-semibold">2013:</span> —</li>
+                <li><span class="font-semibold">2012:</span> —</li>
+                <li><span class="font-semibold">2011:</span> —</li>
+                <li><span class="font-semibold">2010:</span> —</li>
+              </ul>
+            </div>
+          </div>
+        </aside>
+      </div>
+
+      <!-- BOTTOM ROW: Trade Money & League Votes full width -->
       <!-- Trade Money Section -->
       <section id="trade-money" class="bg-gray-800 p-6 rounded-xl">
         <h2 class="text-2xl font-semibold mb-4">Trade Money Total ($5 per player)</h2>
@@ -143,8 +199,8 @@
           <li>Final decisions are announced before draft day.</li>
         </ul>
       </section>
-
     </main>
+
     <footer class="text-center py-4 text-gray-400 text-sm">Built for our league ✌️</footer>
   </body>
 </html>
