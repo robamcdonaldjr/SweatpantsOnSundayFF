@@ -47,51 +47,8 @@
 
     <main class="max-w-7xl mx-auto px-4 py-8 grid lg:grid-cols-12 gap-6">
       <!-- LEFT: content -->
-      <section class="lg:col-span-8 space-y-6">
-        <!-- Standings & Filters -->
-        <div class="card rounded-2xl bg-white/5 p-5 border border-white/10">
-          <div class="flex flex-wrap items-center justify-between gap-3">
-            <h2 class="text-lg font-semibold">Standings</h2>
-            <div class="flex items-center gap-2 text-sm">
-              <label class="flex items-center gap-2 bg-white/5 rounded-xl px-3 py-1.5">
-                <input id="toggleAllTime" type="checkbox" class="accent-white" />
-                <span>Show all-time records</span>
-              </label>
-              <label class="bg-white/5 rounded-xl px-3 py-1.5">
-                Sort by
-                <select id="standingsSort" class="bg-transparent outline-none">
-                  <option value="winpct">Win %</option>
-                  <option value="pointsFor">Points For</option>
-                  <option value="record">Record</option>
-                  <option value="name">Team Name</option>
-                </select>
-              </label>
-            </div>
-          </div>
-          <div class="overflow-x-auto mt-4">
-            <table class="min-w-full text-sm">
-              <thead class="text-ink-300">
-                <tr>
-                  <th class="text-left py-2 pr-4">#</th>
-                  <th class="text-left py-2 pr-4">Team</th>
-                  <th class="text-right py-2 pr-4">Record</th>
-                  <th class="text-right py-2 pr-4">Win %</th>
-                  <th class="text-right py-2 pr-4">PF</th>
-                  <th class="text-right py-2 pr-4">PA</th>
-                </tr>
-              </thead>
-              <tbody id="standingsBody"></tbody>
-            </table>
-          </div>
-        </div>
-
-        <!-- Teams Grid -->
-        <div class="card rounded-2xl bg-white/5 p-5 border border-white/10">
-          <div class="flex items-center justify-between">
-            <h2 class="text-lg font-semibold">Teams</h2>
-            <input id="teamSearch" class="bg-white/10 rounded-xl px-3 py-2 text-sm outline-none" placeholder="Search teams or managers…" />
-          </div>
-          <div id="teamsGrid" class="mt-4 grid sm:grid-cols-2 xl:grid-cols-3 gap-4">
+      <section class="lg:col-span-8 space-y-6">        <!-- Teams Grid -->
+        <div id="teamsGrid" class="mt-4 grid sm:grid-cols-2 xl:grid-cols-3 gap-4">
             <!-- Rendered team cards will appear here -->
           </div>
         </div>
@@ -286,12 +243,12 @@
       function renderAll(){
         document.title = `${DATA.meta?.leagueName || 'League Hub'} — ${DATA.meta?.season || ''}`
         if (EL.jsonInput) EL.jsonInput.value = JSON.stringify(DATA, null, 2)
-        renderStandings(); renderTeams(); renderTrades(); renderPayouts()
+        renderTeams(); renderTrades(); renderPayouts()
       }
 
       // Events
-      EL.standingsSort.addEventListener('change', renderStandings)
-      EL.toggleAllTime.addEventListener('change', renderStandings)
+      EL.standingsSort?.addEventListener('change', renderStandings)
+      EL.toggleAllTime?.addEventListener('change', renderStandings)
       EL.teamSearch.addEventListener('input', renderTeams)
 
       EL.applyBtn?.addEventListener('click', ()=>{
