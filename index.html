@@ -1,95 +1,121 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Sweatpants on Sunday Fantasy Football League Dues Tracker</title>
-  <style>
-    /* --- styles unchanged from your version --- */
-    :root {
-      --bg: #000;
-      --fg: #fff;
-      --muted: #bdbdbd;
-      --accent: #e0e0e0;
-      --card: #111;
-      --border: #222;
-      --focus: #6ee7ff;
-      --paid: #00ff00;
-      --sticky-shadow: rgba(0,0,0,0.35);
-      --venmo: #3D95CE;
-    }
-    html, body { background: var(--bg); color: var(--fg); margin: 0; padding: 0; font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif; line-height: 1.45; }
-    .wrap { max-width: 900px; margin: 0 auto; padding: 16px; }
-    /* rest of your CSS… (unchanged) */
-  </style>
-</head>
-<body>
-  <div class="wrap">
-    <div class="warning">If dues are not paid by the Tuesday after the last game of the week every week, you will get spammed.</div>
-    <div class="sub">$5 weekly buy in with $60/week payout to highest point total</div>
-
-    <section class="card">
-      <h2>Sweatpants on Sunday Fantasy Football League dues tracker</h2>
-
-      <div id="unlockBox">
-        <input type="password" id="passwordInput" placeholder="Enter password to edit">
-        <button id="unlockBtn">Unlock</button>
-      </div>
-
-      <div class="toolbar">
-        <div class="group">
-          <button id="prevWeek">&larr;</button>
-          <span id="currentWeekLabel">Week 1</span>
-          <button id="nextWeek">&rarr;</button>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Sweatpants on Sunday — League Hub</title>
+    <meta name="description" content="Fantasy Football League hub: teams, records, stats, trades bank, payouts." />
+    <!-- Tailwind via CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              ink: {
+                50: '#f5f7fb', 100: '#eef2f7', 200: '#e2e8f0', 300: '#cfd8e3', 400: '#97a6ba', 500: '#64748b', 600: '#475569', 700: '#334155', 800: '#1f2937', 900: '#0b1324'
+              }
+            }
+          }
+        }
+      }
+    </script>
+    <style>
+      /* Smooth card hover */
+      .card { transition: transform .15s ease, box-shadow .15s ease }
+      .card:hover { transform: translateY(-2px) }
+      /* Hide the JSON editor by default on narrow screens */
+      @media (max-width: 1024px) { #dataEditor { display:none } }
+    </style>
+  </head>
+  <body class="bg-ink-900 text-white min-h-screen">
+    <header class="sticky top-0 z-30 backdrop-blur supports-[backdrop-filter]:bg-ink-900/70 bg-ink-900/90 border-b border-ink-700">
+      <div class="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between gap-3">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-2xl bg-white/10 grid place-items-center font-bold">🏈</div>
+          <div>
+            <h1 class="text-xl font-semibold leading-tight">Sweatpants on Sunday — League Hub</h1>
+            <p class="text-sm text-ink-300">Live snapshot: teams, records, stats, trades bank & payouts</p>
+          </div>
         </div>
-        <div class="group">
-          <button id="clearThisWeek">Clear week</button>
-          <button id="clearAllDues">Clear all</button>
+        <div class="flex items-center gap-2">
+          <button id="importBtn" class="px-3 py-2 rounded-xl bg-white/10 hover:bg-white/20 text-sm">Import JSON</button>
+          <button id="exportBtn" class="px-3 py-2 rounded-xl bg-white/10 hover:bg-white/20 text-sm">Export JSON</button>
+          <button id="resetBtn" class="px-3 py-2 rounded-xl bg-white/10 hover:bg-white/20 text-sm">Reset Sample</button>
+          <a href="#payouts" class="px-3 py-2 rounded-xl bg-white/10 hover:bg-white/20 text-sm">Payouts</a>
         </div>
       </div>
+    </header>
 
-      <div class="table-wrap">
-        <table id="duesTable">
-          <thead>
-            <tr>
-              <th class="team-col">Team</th>
-              <th class="pay-col">Pay</th>
-              <th class="center-col" id="weekPaidHeader">Week 1 Paid</th>
-              <th class="center-col">Paid for the Year</th>
-            </tr>
-          </thead>
-          <tbody></tbody>
-        </table>
-      </div>
+    <main class="max-w-7xl mx-auto px-4 py-8 grid lg:grid-cols-12 gap-6">
+      <!-- LEFT: content -->
+      <section class="lg:col-span-8 space-y-6">
+        <!-- Standings & Filters -->
+        <div class="card rounded-2xl bg-white/5 p-5 border border-white/10">
+          <div class="flex flex-wrap items-center justify-between gap-3">
+            <h2 class="text-lg font-semibold">Standings</h2>
+            <div class="flex items-center gap-2 text-sm">
+              <label class="flex items-center gap-2 bg-white/5 rounded-xl px-3 py-1.5">
+                <input id="toggleAllTime" type="checkbox" class="accent-white" />
+                <span>Show all-time records</span>
+              </label>
+              <label class="bg-white/5 rounded-xl px-3 py-1.5">
+                Sort by
+                <select id="standingsSort" class="bg-transparent outline-none">
+                  <option value="winpct">Win %</option>
+                  <option value="pointsFor">Points For</option>
+                  <option value="record">Record</option>
+                  <option value="name">Team Name</option>
+                </select>
+              </label>
+            </div>
+          </div>
+          <div class="overflow-x-auto mt-4">
+            <table class="min-w-full text-sm">
+              <thead class="text-ink-300">
+                <tr>
+                  <th class="text-left py-2 pr-4">#</th>
+                  <th class="text-left py-2 pr-4">Team</th>
+                  <th class="text-right py-2 pr-4">Record</th>
+                  <th class="text-right py-2 pr-4">Win %</th>
+                  <th class="text-right py-2 pr-4">PF</th>
+                  <th class="text-right py-2 pr-4">PA</th>
+                </tr>
+              </thead>
+              <tbody id="standingsBody"></tbody>
+            </table>
+          </div>
+        </div>
 
-      <p class="note">If “Paid for the Year” is checked, all weeks count as paid.</p>
-      <div id="saveToast" class="saved">Saved ✔</div>
-    </section>
-  </div>
+        <!-- Teams Grid -->
+        <div class="card rounded-2xl bg-white/5 p-5 border border-white/10">
+          <div class="flex items-center justify-between">
+            <h2 class="text-lg font-semibold">Teams</h2>
+            <input id="teamSearch" class="bg-white/10 rounded-xl px-3 py-2 text-sm outline-none" placeholder="Search teams or managers…" />
+          </div>
+          <div id="teamsGrid" class="mt-4 grid sm:grid-cols-2 xl:grid-cols-3 gap-4"></div>
+        </div>
 
-  <!-- Firebase SDKs -->
-  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
+        <!-- Trades Bank -->
+        <div class="card rounded-2xl bg-white/5 p-5 border border-white/10" id="trades">
+          <div class="flex flex-wrap items-center justify-between gap-3">
+            <h2 class="text-lg font-semibold">Trade Money Total ($5 per player in a trade)</h2>
+            <span id="tradeTotal" class="px-3 py-1.5 rounded-xl bg-white/10 text-sm"></span>
+          </div>
+          <div class="mt-3 overflow-x-auto">
+            <table class="min-w-full text-sm">
+              <thead class="text-ink-300">
+                <tr>
+                  <th class="text-left py-2 pr-4">Date</th>
+                  <th class="text-left py-2 pr-4">Teams</th>
+                  <th class="text-left py-2 pr-4">Players Moved</th>
+                  <th class="text-right py-2 pr-4">Amount</th>
+                </tr>
+              </thead>
+              <tbody id="tradesBody"></tbody>
+            </table>
+          </div>
+        </div>
 
-  <script>
-    /* ✅ Your Firebase config (adapted for GitHub Pages) */
-    const FIREBASE_CONFIG = {
-      apiKey: "AIzaSyCuYB9z6qQU2DKQMru1VbocZkDT50fXSvs",
-      authDomain: "fantasy-dues.firebaseapp.com",
-      databaseURL: "https://fantasy-dues-default-rtdb.firebaseio.com", // required for Realtime DB
-      projectId: "fantasy-dues",
-      storageBucket: "fantasy-dues.firebasestorage.app",
-      messagingSenderId: "699188137445",
-      appId: "1:699188137445:web:3311261a914ef2797bf30c",
-      measurementId: "G-YS1K36SQ4W"
-    };
-
-    /* --- rest of your JavaScript logic (unchanged except using FIREBASE_CONFIG) --- */
-    firebase.initializeApp(FIREBASE_CONFIG);
-    const db = firebase.database();
-
-    // … all your dues tracker JS code here (the renderDues, week nav, etc.)
-    // make sure it uses `db.ref(...)` for saving/loading dues
-  </script>
-</body>
-</html>
+        <!-- Payouts -->
+        <div class="card rounded-2xl bg-w
