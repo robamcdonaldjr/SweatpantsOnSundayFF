@@ -21,10 +21,8 @@
       }
     </script>
     <style>
-      /* Smooth card hover */
       .card { transition: transform .15s ease, box-shadow .15s ease }
       .card:hover { transform: translateY(-2px) }
-      /* Hide the JSON editor by default on narrow screens */
       @media (max-width: 1024px) { #dataEditor { display:none } }
     </style>
   </head>
@@ -102,6 +100,19 @@
             <h2 class="text-lg font-semibold">Trade Money Total ($5 per player in a trade)</h2>
             <span id="tradeTotal" class="px-3 py-1.5 rounded-xl bg-white/10 text-sm"></span>
           </div>
+
+          <!-- Quick import from ESPN transactions log (ignores Trade Processed) -->
+          <details class="mt-3 rounded-xl border border-white/10 bg-white/5">
+            <summary class="cursor-pointer px-4 py-2 text-sm text-ink-200">Quick import from ESPN Transactions Log (paste text or OCR). We will keep out the <strong>Trade Processed</strong> sections automatically.</summary>
+            <div class="p-4 space-y-2">
+              <textarea id="espnLog" class="w-full h-40 rounded-xl bg-black/30 p-3 font-mono text-xs" placeholder="Paste your transactions page text here. Only 'Trade Accepted' blocks will be parsed; 'Trade Processed' will be ignored."></textarea>
+              <div class="flex items-center gap-2">
+                <button id="parseEspnBtn" class="px-3 py-2 rounded-xl bg-white/10 hover:bg-white/20 text-sm">Parse & Add Trades</button>
+                <span class="text-xs text-ink-300">Tip: Each player line should look like: <code>Team A traded Player, POS Team → Team B</code></span>
+              </div>
+            </div>
+          </details>
+
           <div class="mt-3 overflow-x-auto">
             <table class="min-w-full text-sm">
               <thead class="text-ink-300">
@@ -118,4 +129,24 @@
         </div>
 
         <!-- Payouts -->
-        <div class="card rounded-2xl bg-w
+        <div class="card rounded-2xl bg-white/5 p-5 border border-white/10" id="payouts">
+          <h2 class="text-lg font-semibold">Payouts</h2>
+          <p class="text-sm text-ink-300">Customize the buckets below to match your league (weekly, season-long, fun bonuses, etc.).</p>
+          <div id="payoutsList" class="mt-4 grid sm:grid-cols-2 gap-4"></div>
+        </div>
+      </section>
+
+      <!-- RIGHT: JSON Editor / Notes -->
+      <aside class="lg:col-span-4 space-y-6">
+        <div class="card rounded-2xl bg-white/5 p-5 border border-white/10" id="dataEditor">
+          <div class="flex items-center justify-between gap-3">
+            <h2 class="text-lg font-semibold">Data Editor</h2>
+            <button id="applyBtn" class="px-3 py-1.5 rounded-xl bg-white/10 hover:bg-white/20 text-sm">Apply</button>
+          </div>
+          <p class="text-sm text-ink-300 mt-1">Paste your ESPN front-page data here (or edit sample). Nothing leaves your browser; it saves to <code>localStorage</code>.</p>
+          <textarea id="jsonInput" class="mt-3 w-full h-[520px] rounded-xl bg-black/30 p-3 font-mono text-xs leading-relaxed"></textarea>
+        </div>
+        <div class="card rounded-2xl bg-white/5 p-5 border border-white/10">
+          <h2 class="text-lg font-semibold">Notes</h2>
+          <ul class="list-disc list-inside text-sm text-ink-200 space-y-1 mt-2">
+            <li>Trade money = <code>$5 × total players moved</code> (both sides).</li>
