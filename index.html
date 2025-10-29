@@ -5,286 +5,135 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Sweatpants on Sunday — League Hub</title>
     <meta name="description" content="Fantasy Football League hub: teams, records, stats, trades bank, payouts." />
-    <!-- Tailwind via CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-      tailwind.config = {
-        theme: {
-          extend: {
-            colors: {
-              ink: {
-                50: '#f5f7fb', 100: '#eef2f7', 200: '#e2e8f0', 300: '#cfd8e3', 400: '#97a6ba', 500: '#64748b', 600: '#475569', 700: '#334155', 800: '#1f2937', 900: '#0b1324'
-              }
-            }
-          }
-        }
-      }
-    </script>
-    <style>
-      .card { transition: transform .15s ease, box-shadow .15s ease }
-      .card:hover { transform: translateY(-2px) }
-      @media (max-width: 1024px) { #dataEditor { display:none } }
-    </style>
   </head>
-  <body class="bg-ink-900 text-white min-h-screen">
-    <header class="sticky top-0 z-30 backdrop-blur supports-[backdrop-filter]:bg-ink-900/70 bg-ink-900/90 border-b border-ink-700">
-      <div class="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between gap-3">
-        <div class="flex items-center gap-3">
-          <div class="w-10 h-10 rounded-2xl bg-white/10 grid place-items-center font-bold">🏈</div>
-          <div>
-            <h1 class="text-xl font-semibold leading-tight">Sweatpants on Sunday — League Hub</h1>
-            <p class="text-sm text-ink-300">Live snapshot: teams, records, stats, trades bank & payouts</p>
-          </div>
-        </div>
-        <div class="flex items-center gap-2">
-          <button id="importBtn" class="px-3 py-2 rounded-xl bg-white/10 hover:bg-white/20 text-sm">Import JSON</button>
-          <button id="exportBtn" class="px-3 py-2 rounded-xl bg-white/10 hover:bg-white/20 text-sm">Export JSON</button>
-          <button id="resetBtn" class="px-3 py-2 rounded-xl bg-white/10 hover:bg-white/20 text-sm">Reset Sample</button>
-          <a href="#payouts" class="px-3 py-2 rounded-xl bg-white/10 hover:bg-white/20 text-sm">Payouts</a>
-        </div>
-      </div>
-    </header>
+  <body class="bg-gray-900 text-white min-h-screen">
+    <header class="p-4 text-center bg-gray-800 text-xl font-bold">Sweatpants on Sunday — League Hub</header>
+    <main class="max-w-5xl mx-auto p-6 space-y-8">
 
-    <main class="max-w-7xl mx-auto px-4 py-8 grid lg:grid-cols-12 gap-6">
-      <!-- LEFT: content -->
-      <section class="lg:col-span-8 space-y-6">        <!-- Teams Grid -->
-        <div id="teamsGrid" class="mt-4 grid sm:grid-cols-2 xl:grid-cols-3 gap-4">
-            <!-- Rendered team cards will appear here -->
+      <!-- Teams Section -->
+      <section id="teams" class="bg-gray-800 p-6 rounded-xl">
+        <h2 class="text-2xl font-semibold mb-4">Teams</h2>
+        <input id="teamSearch" class="bg-white/10 rounded-xl px-3 py-2 text-sm outline-none w-full mb-4" placeholder="Search teams or managers…" />
+        <div id="teamsGrid" class="grid sm:grid-cols-2 xl:grid-cols-3 gap-4">
+          <div class="card bg-gray-700 p-4 rounded-xl">
+            <h3 class="font-semibold">The McNuggets</h3>
+            <p class="text-gray-300 text-sm">Manager: Robert McDonald</p>
           </div>
-        </div>
-
-        <!-- Trades Bank (no importer, just your accepted trades hard-coded) -->
-        <!-- Teams (restored and placed at the top) -->
-        <div class="card rounded-2xl bg-white/5 p-5 border border-white/10">
-          <div class="flex items-center justify-between">
-            <h2 class="text-lg font-semibold">Teams</h2>
-            <input id="teamSearch" class="bg-white/10 rounded-xl px-3 py-2 text-sm outline-none" placeholder="Search teams or managers…" />
+          <div class="card bg-gray-700 p-4 rounded-xl">
+            <h3 class="font-semibold">Cooter Claws</h3>
+            <p class="text-gray-300 text-sm">Manager: Adam Chambers</p>
           </div>
-          <div id="teamsGrid" class="mt-4 grid sm:grid-cols-2 xl:grid-cols-3 gap-4"></div>
-        </div>
-
-        <!-- Trades Bank -->
-        <div class="card rounded-2xl bg-white/5 p-5 border border-white/10" id="trades">
-          <div class="flex flex-wrap items-center justify-between gap-3">
-            <h2 class="text-lg font-semibold">Trade Money Total ($5 per player in a trade)</h2>
-            <span id="tradeTotal" class="px-3 py-1.5 rounded-xl bg-white/10 text-sm"></span>
+          <div class="card bg-gray-700 p-4 rounded-xl">
+            <h3 class="font-semibold">The McAstericks</h3>
+            <p class="text-gray-300 text-sm">Manager: Matthew McDonald</p>
           </div>
-          <div class="mt-3 overflow-x-auto">
-            <table class="min-w-full text-sm">
-              <thead class="text-ink-300">
-                <tr>
-                  <th class="text-left py-2 pr-4">Date</th>
-                  <th class="text-left py-2 pr-4">Teams</th>
-                  <th class="text-left py-2 pr-4">Players Moved</th>
-                  <th class="text-right py-2 pr-4">Amount</th>
-                </tr>
-              </thead>
-              <tbody id="tradesBody"></tbody>
-            </table>
+          <div class="card bg-gray-700 p-4 rounded-xl">
+            <h3 class="font-semibold">You got a purdy mouth</h3>
+            <p class="text-gray-300 text-sm">Manager: Brendan Guptill</p>
           </div>
-        </div>
-
-        <!-- Payouts -->
-        <div class="card rounded-2xl bg-white/5 p-5 border border-white/10" id="payouts">
-          <h2 class="text-lg font-semibold">Payouts</h2>
-          <p class="text-sm text-ink-300">Customize the buckets below to match your league (weekly, season-long, fun bonuses, etc.).</p>
-          <div id="payoutsList" class="mt-4 grid sm:grid-cols-2 gap-4"></div>
+          <div class="card bg-gray-700 p-4 rounded-xl">
+            <h3 class="font-semibold">Hauk Tua is dead. Rob sucks</h3>
+            <p class="text-gray-300 text-sm">Manager: Mike Chakoutis</p>
+          </div>
+          <div class="card bg-gray-700 p-4 rounded-xl">
+            <h3 class="font-semibold">Toon Squad</h3>
+            <p class="text-gray-300 text-sm">Manager: John Chambers</p>
+          </div>
+          <div class="card bg-gray-700 p-4 rounded-xl">
+            <h3 class="font-semibold">LUCKY 22</h3>
+            <p class="text-gray-300 text-sm">Manager: Steven Boccelli</p>
+          </div>
+          <div class="card bg-gray-700 p-4 rounded-xl">
+            <h3 class="font-semibold">Jacking goff in laporta potty</h3>
+            <p class="text-gray-300 text-sm">Manager: Leonard Kelloway</p>
+          </div>
+          <div class="card bg-gray-700 p-4 rounded-xl">
+            <h3 class="font-semibold">Pugnacious Love</h3>
+            <p class="text-gray-300 text-sm">Manager: PJ Holey</p>
+          </div>
+          <div class="card bg-gray-700 p-4 rounded-xl">
+            <h3 class="font-semibold">Bad Boys</h3>
+            <p class="text-gray-300 text-sm">Manager: Scott Fiore</p>
+          </div>
+          <div class="card bg-gray-700 p-4 rounded-xl">
+            <h3 class="font-semibold">Check My Balls</h3>
+            <p class="text-gray-300 text-sm">Manager: Steven Small</p>
+          </div>
+          <div class="card bg-gray-700 p-4 rounded-xl">
+            <h3 class="font-semibold">Bill Croskey's Special Drink</h3>
+            <p class="text-gray-300 text-sm">Manager: Peter Olson</p>
+          </div>
         </div>
       </section>
 
-      <!-- RIGHT: JSON Editor / Notes -->
-      <aside class="lg:col-span-4 space-y-6">
-        <div class="card rounded-2xl bg-white/5 p-5 border border-white/10">
-          <h2 class="text-lg font-semibold">Notes</h2>
-          <ul class="list-disc list-inside text-sm text-ink-200 space-y-1 mt-2">
-            <li>Trade money = <code>$5 × total players moved</code> (both sides).</li>
-            <li>Only "Trade Accepted" entries are reflected below; "Trade Processed" is intentionally excluded.</li>
-            <li>Click <em>Export JSON</em> to download your data file for GitHub.</li>
-          </ul>
-        </div>
-      </aside>
+      <!-- Trade Money Section -->
+      <section id="trade-money" class="bg-gray-800 p-6 rounded-xl">
+        <h2 class="text-2xl font-semibold mb-4">Trade Money Total ($5 per player)</h2>
+        <table class="w-full text-left border-collapse">
+          <thead>
+            <tr class="border-b border-gray-700">
+              <th class="p-2">Date</th>
+              <th class="p-2">Teams</th>
+              <th class="p-2 text-right">Players Moved</th>
+              <th class="p-2 text-right">Amount</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="border-b border-gray-700">
+              <td class="p-2">Tue Oct 28</td>
+              <td class="p-2">Hauk Tua is dead. Rob sucks ⇄ The McAstericks</td>
+              <td class="p-2 text-right">2</td>
+              <td class="p-2 text-right">$10</td>
+            </tr>
+            <tr class="border-b border-gray-700">
+              <td class="p-2">Wed Oct 22</td>
+              <td class="p-2">You got a purdy mouth ⇄ Cooter Claws</td>
+              <td class="p-2 text-right">5</td>
+              <td class="p-2 text-right">$25</td>
+            </tr>
+            <tr class="border-b border-gray-700">
+              <td class="p-2">Wed Oct 1</td>
+              <td class="p-2">Bill Croskey's Special Drink ⇄ Check My Balls</td>
+              <td class="p-2 text-right">4</td>
+              <td class="p-2 text-right">$20</td>
+            </tr>
+            <tr class="border-b border-gray-700">
+              <td class="p-2">Tue Sep 23</td>
+              <td class="p-2">Check My Balls ⇄ The McNuggets</td>
+              <td class="p-2 text-right">3</td>
+              <td class="p-2 text-right">$15</td>
+            </tr>
+            <tr class="border-b border-gray-700">
+              <td class="p-2">Tue Sep 16</td>
+              <td class="p-2">Hauk Tua is dead. Rob sucks ⇄ You got a purdy mouth</td>
+              <td class="p-2 text-right">2</td>
+              <td class="p-2 text-right">$10</td>
+            </tr>
+          </tbody>
+          <tfoot>
+            <tr class="border-t border-gray-700 font-semibold">
+              <td class="p-2" colspan="3">Total</td>
+              <td class="p-2 text-right">$80</td>
+            </tr>
+          </tfoot>
+        </table>
+      </section>
+
+      <!-- Payouts Section -->
+      <section id="payouts" class="bg-gray-800 p-6 rounded-xl">
+        <h2 class="text-2xl font-semibold mb-4">Payouts</h2>
+        <p class="text-gray-300 text-sm mb-4">Customize the buckets below to match your league (weekly, season-long, fun bonuses, etc.).</p>
+        <ul class="list-disc list-inside text-gray-300 space-y-1">
+          <li>Champion: $600 (Playoff Winner)</li>
+          <li>Runner-up: $250 (Loses in Finals)</li>
+          <li>Regular Season Points Leader: $150 (Most PF after Week 14)</li>
+          <li>Weekly High Score: $20 (Paid each week)</li>
+          <li>Toilet Bowl Winner: $25 (Because comedy)</li>
+        </ul>
+      </section>
+
     </main>
-
-    <!-- Sample / Live Data -->
-    <script id="league-data" type="application/json">
-{
-  "meta": { "leagueName": "Sweatpants on Sunday", "season": 2025, "updated": "2025-10-29" },
-  "teams": [
-    { "id": 1,  "name": "The McNuggets",                    "manager": "Robert McDonald" },
-    { "id": 2,  "name": "Cooter Claws",                      "manager": "Adam Chambers" },
-    { "id": 3,  "name": "The McAstericks",                   "manager": "Matthew McDonald" },
-    { "id": 4,  "name": "You got a purdy mouth",             "manager": "Brendan Guptill" },
-    { "id": 5,  "name": "Hauk Tua is dead. Rob sucks",       "manager": "Mike Chakoutis" },
-    { "id": 6,  "name": "Toon Squad",                        "manager": "John Chambers" },
-    { "id": 7,  "name": "LUCKY 22",                          "manager": "Steven Boccelli" },
-    { "id": 8,  "name": "Jacking goff in laporta potty",     "manager": "Leonard Kelloway" },
-    { "id": 9,  "name": "Pugnacious Love",                   "manager": "PJ Holey" },
-    { "id": 10, "name": "Bad Boys",                           "manager": "Scott Fiore" },
-    { "id": 11, "name": "Check My Balls",                     "manager": "Steven Small" },
-    { "id": 12, "name": "Bill Croskey's Special Drink",       "manager": "Peter Olson" }
-  ],
-  "trades": [
-    { "date": "Tue Oct 28", "teams": ["Hauk Tua is dead. Rob sucks", "The McAstericks"], "playersMoved": 2 },
-    { "date": "Wed Oct 22", "teams": ["You got a purdy mouth", "Cooter Claws"], "playersMoved": 5 },
-    { "date": "Wed Oct 1",  "teams": ["Bill Croskey's Special Drink", "Check My Balls"], "playersMoved": 4 },
-    { "date": "Tue Sep 23", "teams": ["Check My Balls", "The McNuggets"], "playersMoved": 3 },
-    { "date": "Tue Sep 16", "teams": ["Hauk Tua is dead. Rob sucks", "You got a purdy mouth"], "playersMoved": 2 }
-  ],
-  "payouts": [
-    { "title": "Champion", "amount": 600, "notes": "Playoff winner" },
-    { "title": "Runner-up", "amount": 250, "notes": "Loses in finals" },
-    { "title": "Regular Season Points Leader", "amount": 150, "notes": "Most PF after Week 14" },
-    { "title": "Weekly High Score", "amount": 20, "notes": "Paid each week" },
-    { "title": "Toilet Bowl Winner", "amount": 25, "notes": "Because comedy" }
-  ]
-}
-    </script>
-
-    <!-- App Script -->
-    <script>
-      const $ = (sel) => document.querySelector(sel)
-      const $$ = (sel) => Array.from(document.querySelectorAll(sel))
-
-      const EL = {
-        standingsBody: $('#standingsBody'),
-        standingsSort: $('#standingsSort'),
-        toggleAllTime: $('#toggleAllTime'),
-        teamsGrid: $('#teamsGrid'),
-        teamSearch: $('#teamSearch'),
-        tradesBody: $('#tradesBody'),
-        tradeTotal: $('#tradeTotal'),
-        payoutsList: $('#payoutsList'),
-        jsonInput: $('#jsonInput'),
-        applyBtn: $('#applyBtn'),
-        importBtn: $('#importBtn'),
-        exportBtn: $('#exportBtn'),
-        resetBtn: $('#resetBtn')
-      }
-
-      const STORAGE_KEY = 'leagueDataV1'
-
-      function loadData() {
-        const cached = localStorage.getItem(STORAGE_KEY)
-        if (cached) return JSON.parse(cached)
-        const raw = document.getElementById('league-data').textContent
-        return JSON.parse(raw)
-      }
-
-      function saveData(data) { localStorage.setItem(STORAGE_KEY, JSON.stringify(data)) }
-
-      let DATA = loadData()
-
-      function fmtRecord(rec) { return `${rec.wins}-${rec.losses}${rec.ties ? '-' + rec.ties : ''}` }
-      function winPct(rec) { const g = rec.wins + rec.losses + (rec.ties||0); return g ? ((rec.wins + (rec.ties||0)*0.5) / g) : 0 }
-      function money(n) { return `$${n.toLocaleString(undefined, {maximumFractionDigits:0})}` }
-
-      function renderStandings() {
-        const allTime = EL.toggleAllTime.checked;
-        const by = EL.standingsSort.value;
-        const rows = [...(DATA.teams || [])].map(t => {
-          const fallbackRec = { wins: 0, losses: 0, ties: 0 };
-          const rec = allTime ? (t.overall || t.record || fallbackRec) : (t.record || t.overall || fallbackRec);
-          const pf = Number.isFinite(t.pointsFor) ? t.pointsFor : 0;
-          const pa = Number.isFinite(t.pointsAgainst) ? t.pointsAgainst : 0;
-          return {
-            name: t.name || '—',
-            manager: t.manager || '—',
-            rec,
-            winpct: winPct(rec),
-            pointsFor: pf,
-            pointsAgainst: pa
-          };
-        });
-        rows.sort((a,b)=>{ switch(by){ case 'pointsFor': return b.pointsFor-a.pointsFor; case 'record': return (b.rec.wins-b.rec.losses)-(a.rec.wins-a.rec.losses); case 'name': return a.name.localeCompare(b.name); default: return b.winpct-a.winpct }});
-        EL.standingsBody.innerHTML = rows.map((r,i)=>`
-          <tr class="border-t border-white/10 hover:bg-white/5">
-            <td class="py-2 pr-4">${i+1}</td>
-            <td class="py-2 pr-4"><div class="font-medium">${r.name}</div><div class="text-ink-300 text-xs">Mgr: ${r.manager}</div></td>
-            <td class="py-2 pr-4 text-right">${fmtRecord(r.rec)}</td>
-            <td class="py-2 pr-4 text-right">${(r.winpct*100).toFixed(1)}%</td>
-            <td class="py-2 pr-4 text-right">${r.pointsFor.toFixed(1)}</td>
-            <td class="py-2 pr-4 text-right">${r.pointsAgainst.toFixed(1)}</td>
-          </tr>`).join('');
-      }
-
-      function renderTeams() {
-        const q = EL.teamSearch.value.trim().toLowerCase()
-        const list = DATA.teams.filter(t => !q ||
-          (t.name||'').toLowerCase().includes(q) ||
-          (t.manager||'').toLowerCase().includes(q))
-
-        EL.teamsGrid.innerHTML = list.map(t=>`
-          <article class="card rounded-2xl border border-white/10 bg-gradient-to-b from-white/10 to-transparent p-4">
-            <h3 class="font-semibold">${t.name}</h3>
-            <p class="text-ink-300 text-sm">Manager: ${t.manager||'—'}</p>
-          </article>
-        `).join('')
-      }
-
-      function renderTrades() {
-        const rows = DATA.trades || []
-        let playersTotal = 0
-        EL.tradesBody.innerHTML = rows.map(tr => {
-          playersTotal += tr.playersMoved
-          const amt = tr.playersMoved * 5
-          return `
-            <tr class="border-t border-white/10">
-              <td class="py-2 pr-4">${tr.date}</td>
-              <td class="py-2 pr-4">${tr.teams.join(' ⇄ ')}</td>
-              <td class="py-2 pr-4">${tr.playersMoved}</td>
-              <td class="py-2 pr-4 text-right">${money(amt)}</td>
-            </tr>`
-        }).join('')
-        EL.tradeTotal.textContent = `Total: ${money(playersTotal * 5)}`
-      }
-
-      function renderPayouts(){
-        const list = DATA.payouts || []
-        EL.payoutsList.innerHTML = list.map(p=>`
-          <div class="rounded-2xl border border-white/10 bg-white/5 p-4">
-            <div class="flex items-center justify-between">
-              <h3 class="font-semibold">${p.title}</h3>
-              <div class="text-right font-medium">${money(p.amount)}</div>
-            </div>
-            ${p.notes ? `<p class="text-sm text-ink-300 mt-1">${p.notes}</p>` : ''}
-          </div>`).join('')
-      }
-
-      function renderAll(){
-        document.title = `${DATA.meta?.leagueName || 'League Hub'} — ${DATA.meta?.season || ''}`
-        if (EL.jsonInput) EL.jsonInput.value = JSON.stringify(DATA, null, 2)
-        renderTeams(); renderTrades(); renderPayouts()
-      }
-
-      // Events
-      EL.standingsSort?.addEventListener('change', renderStandings)
-      EL.toggleAllTime?.addEventListener('change', renderStandings)
-      EL.teamSearch.addEventListener('input', renderTeams)
-
-      EL.applyBtn?.addEventListener('click', ()=>{
-        try{ const parsed = JSON.parse(EL.jsonInput.value); DATA = parsed; saveData(DATA); renderAll() }
-        catch(e){ alert('Invalid JSON. Please fix and try again.') }
-      })
-
-      EL.resetBtn.addEventListener('click', ()=>{ localStorage.removeItem(STORAGE_KEY); DATA = loadData(); renderAll() })
-
-      EL.exportBtn?.addEventListener('click', ()=>{
-        const blob = new Blob([JSON.stringify(DATA, null, 2)], {type:'application/json'})
-        const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'league-data.json'; a.click()
-      })
-
-      EL.importBtn?.addEventListener('click', ()=>{
-        const input = document.createElement('input'); input.type = 'file'; input.accept = 'application/json,.json'
-        input.onchange = ()=>{ const file = input.files?.[0]; if(!file) return; const fr = new FileReader(); fr.onload = ()=>{ try{ DATA = JSON.parse(fr.result); saveData(DATA); renderAll() }catch(e){ alert('Could not parse that JSON file.') } }; fr.readAsText(file) }
-        input.click()
-      })
-
-      // Init
-      renderAll()
-    </script>
-
-    <footer class="max-w-7xl mx-auto px-4 pb-16 pt-4 text-center text-xs text-ink-400">
-      Built for our league. ✌️
-    </footer>
+    <footer class="text-center py-4 text-gray-400 text-sm">Built for our league ✌️</footer>
   </body>
 </html>
