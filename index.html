@@ -5,148 +5,63 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Sweatpants on Sunday — League Hub</title>
     <meta name="description" content="Fantasy Football League hub: teams, records, stats, trades bank, payouts." />
-    <!-- Tailwind via CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-      tailwind.config = {
-        theme: {
-          extend: {
-            colors: {
-              ink: {
-                50: '#f5f7fb', 100: '#eef2f7', 200: '#e2e8f0', 300: '#cfd8e3', 400: '#97a6ba', 500: '#64748b', 600: '#475569', 700: '#334155', 800: '#1f2937', 900: '#0b1324'
-              }
-            }
-          }
-        }
-      }
-    </script>
-    <style>
-      .card { transition: transform .15s ease, box-shadow .15s ease }
-      .card:hover { transform: translateY(-2px) }
-      @media (max-width: 1024px) { #dataEditor { display:none } }
-    </style>
   </head>
-  <body class="bg-ink-900 text-white min-h-screen">
-    <header class="sticky top-0 z-30 backdrop-blur supports-[backdrop-filter]:bg-ink-900/70 bg-ink-900/90 border-b border-ink-700">
-      <div class="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between gap-3">
-        <div class="flex items-center gap-3">
-          <div class="w-10 h-10 rounded-2xl bg-white/10 grid place-items-center font-bold">🏈</div>
-          <div>
-            <h1 class="text-xl font-semibold leading-tight">Sweatpants on Sunday — League Hub</h1>
-            <p class="text-sm text-ink-300">Live snapshot: teams, records, stats, trades bank & payouts</p>
-          </div>
-        </div>
-        <div class="flex items-center gap-2">
-          <button id="importBtn" class="px-3 py-2 rounded-xl bg-white/10 hover:bg-white/20 text-sm">Import JSON</button>
-          <button id="exportBtn" class="px-3 py-2 rounded-xl bg-white/10 hover:bg-white/20 text-sm">Export JSON</button>
-          <button id="resetBtn" class="px-3 py-2 rounded-xl bg-white/10 hover:bg-white/20 text-sm">Reset Sample</button>
-          <a href="#payouts" class="px-3 py-2 rounded-xl bg-white/10 hover:bg-white/20 text-sm">Payouts</a>
-        </div>
-      </div>
-    </header>
-
-    <main class="max-w-7xl mx-auto px-4 py-8 grid lg:grid-cols-12 gap-6">
-      <!-- LEFT: content -->
-      <section class="lg:col-span-8 space-y-6">
-        <!-- Standings & Filters -->
-        <div class="card rounded-2xl bg-white/5 p-5 border border-white/10">
-          <div class="flex flex-wrap items-center justify-between gap-3">
-            <h2 class="text-lg font-semibold">Standings</h2>
-            <div class="flex items-center gap-2 text-sm">
-              <label class="flex items-center gap-2 bg-white/5 rounded-xl px-3 py-1.5">
-                <input id="toggleAllTime" type="checkbox" class="accent-white" />
-                <span>Show all-time records</span>
-              </label>
-              <label class="bg-white/5 rounded-xl px-3 py-1.5">
-                Sort by
-                <select id="standingsSort" class="bg-transparent outline-none">
-                  <option value="winpct">Win %</option>
-                  <option value="pointsFor">Points For</option>
-                  <option value="record">Record</option>
-                  <option value="name">Team Name</option>
-                </select>
-              </label>
-            </div>
-          </div>
-          <div class="overflow-x-auto mt-4">
-            <table class="min-w-full text-sm">
-              <thead class="text-ink-300">
-                <tr>
-                  <th class="text-left py-2 pr-4">#</th>
-                  <th class="text-left py-2 pr-4">Team</th>
-                  <th class="text-right py-2 pr-4">Record</th>
-                  <th class="text-right py-2 pr-4">Win %</th>
-                  <th class="text-right py-2 pr-4">PF</th>
-                  <th class="text-right py-2 pr-4">PA</th>
-                </tr>
-              </thead>
-              <tbody id="standingsBody"></tbody>
-            </table>
-          </div>
-        </div>
-
-        <!-- Teams Grid -->
-        <div class="card rounded-2xl bg-white/5 p-5 border border-white/10">
-          <div class="flex items-center justify-between">
-            <h2 class="text-lg font-semibold">Teams</h2>
-            <input id="teamSearch" class="bg-white/10 rounded-xl px-3 py-2 text-sm outline-none" placeholder="Search teams or managers…" />
-          </div>
-          <div id="teamsGrid" class="mt-4 grid sm:grid-cols-2 xl:grid-cols-3 gap-4"></div>
-        </div>
-
-        <!-- Trades Bank -->
-        <div class="card rounded-2xl bg-white/5 p-5 border border-white/10" id="trades">
-          <div class="flex flex-wrap items-center justify-between gap-3">
-            <h2 class="text-lg font-semibold">Trade Money Total ($5 per player in a trade)</h2>
-            <span id="tradeTotal" class="px-3 py-1.5 rounded-xl bg-white/10 text-sm"></span>
-          </div>
-
-          <!-- Quick import from ESPN transactions log (ignores Trade Processed) -->
-          <details class="mt-3 rounded-xl border border-white/10 bg-white/5">
-            <summary class="cursor-pointer px-4 py-2 text-sm text-ink-200">Quick import from ESPN Transactions Log (paste text or OCR). We will keep out the <strong>Trade Processed</strong> sections automatically.</summary>
-            <div class="p-4 space-y-2">
-              <textarea id="espnLog" class="w-full h-40 rounded-xl bg-black/30 p-3 font-mono text-xs" placeholder="Paste your transactions page text here. Only 'Trade Accepted' blocks will be parsed; 'Trade Processed' will be ignored."></textarea>
-              <div class="flex items-center gap-2">
-                <button id="parseEspnBtn" class="px-3 py-2 rounded-xl bg-white/10 hover:bg-white/20 text-sm">Parse & Add Trades</button>
-                <span class="text-xs text-ink-300">Tip: Each player line should look like: <code>Team A traded Player, POS Team → Team B</code></span>
-              </div>
-            </div>
-          </details>
-
-          <div class="mt-3 overflow-x-auto">
-            <table class="min-w-full text-sm">
-              <thead class="text-ink-300">
-                <tr>
-                  <th class="text-left py-2 pr-4">Date</th>
-                  <th class="text-left py-2 pr-4">Teams</th>
-                  <th class="text-left py-2 pr-4">Players Moved</th>
-                  <th class="text-right py-2 pr-4">Amount</th>
-                </tr>
-              </thead>
-              <tbody id="tradesBody"></tbody>
-            </table>
-          </div>
-        </div>
-
-        <!-- Payouts -->
-        <div class="card rounded-2xl bg-white/5 p-5 border border-white/10" id="payouts">
-          <h2 class="text-lg font-semibold">Payouts</h2>
-          <p class="text-sm text-ink-300">Customize the buckets below to match your league (weekly, season-long, fun bonuses, etc.).</p>
-          <div id="payoutsList" class="mt-4 grid sm:grid-cols-2 gap-4"></div>
-        </div>
+  <body class="bg-gray-900 text-white min-h-screen">
+    <header class="p-4 text-center bg-gray-800 text-xl font-bold">Sweatpants on Sunday — League Hub</header>
+    <main class="max-w-5xl mx-auto p-6 space-y-8">
+      <section id="trade-money" class="bg-gray-800 p-6 rounded-xl">
+        <h2 class="text-2xl font-semibold mb-4">Trade Money Total ($5 per player)</h2>
+        <table class="w-full text-left border-collapse">
+          <thead>
+            <tr class="border-b border-gray-700">
+              <th class="p-2">Date</th>
+              <th class="p-2">Teams</th>
+              <th class="p-2 text-right">Players Moved</th>
+              <th class="p-2 text-right">Amount</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="border-b border-gray-700">
+              <td class="p-2">Tue Oct 28</td>
+              <td class="p-2">Hauk Tua is dead. Rob sucks ⇄ The McAstericks</td>
+              <td class="p-2 text-right">2</td>
+              <td class="p-2 text-right">$10</td>
+            </tr>
+            <tr class="border-b border-gray-700">
+              <td class="p-2">Wed Oct 22</td>
+              <td class="p-2">You got a purdy mouth ⇄ Cooter Claws</td>
+              <td class="p-2 text-right">5</td>
+              <td class="p-2 text-right">$25</td>
+            </tr>
+            <tr class="border-b border-gray-700">
+              <td class="p-2">Wed Oct 1</td>
+              <td class="p-2">Bill Croskey's Special Drink ⇄ Check My Balls</td>
+              <td class="p-2 text-right">4</td>
+              <td class="p-2 text-right">$20</td>
+            </tr>
+            <tr class="border-b border-gray-700">
+              <td class="p-2">Tue Sep 23</td>
+              <td class="p-2">Check My Balls ⇄ The McNuggets</td>
+              <td class="p-2 text-right">3</td>
+              <td class="p-2 text-right">$15</td>
+            </tr>
+            <tr class="border-b border-gray-700">
+              <td class="p-2">Tue Sep 16</td>
+              <td class="p-2">Hauk Tua is dead. Rob sucks ⇄ You got a purdy mouth</td>
+              <td class="p-2 text-right">2</td>
+              <td class="p-2 text-right">$10</td>
+            </tr>
+          </tbody>
+          <tfoot>
+            <tr class="border-t border-gray-700 font-semibold">
+              <td class="p-2" colspan="3">Total</td>
+              <td class="p-2 text-right">$80</td>
+            </tr>
+          </tfoot>
+        </table>
       </section>
-
-      <!-- RIGHT: JSON Editor / Notes -->
-      <aside class="lg:col-span-4 space-y-6">
-        <div class="card rounded-2xl bg-white/5 p-5 border border-white/10" id="dataEditor">
-          <div class="flex items-center justify-between gap-3">
-            <h2 class="text-lg font-semibold">Data Editor</h2>
-            <button id="applyBtn" class="px-3 py-1.5 rounded-xl bg-white/10 hover:bg-white/20 text-sm">Apply</button>
-          </div>
-          <p class="text-sm text-ink-300 mt-1">Paste your ESPN front-page data here (or edit sample). Nothing leaves your browser; it saves to <code>localStorage</code>.</p>
-          <textarea id="jsonInput" class="mt-3 w-full h-[520px] rounded-xl bg-black/30 p-3 font-mono text-xs leading-relaxed"></textarea>
-        </div>
-        <div class="card rounded-2xl bg-white/5 p-5 border border-white/10">
-          <h2 class="text-lg font-semibold">Notes</h2>
-          <ul class="list-disc list-inside text-sm text-ink-200 space-y-1 mt-2">
-            <li>Trade money = <code>$5 × total players moved</code> (both sides).</li>
+    </main>
+    <footer class="text-center py-4 text-gray-400 text-sm">Built for our league ✌️</footer>
+  </body>
+</html>
