@@ -11,9 +11,7 @@
     <header class="p-4 text-center bg-gray-800 text-xl font-bold">Sweatpants on Sunday — League Hub</header>
 
     <main class="max-w-6xl mx-auto p-6 space-y-8">
-      <!-- TOP ROW: Left column (Teams + Payouts), Right column (Trophy) -->
       <div class="grid lg:grid-cols-3 gap-8">
-        <!-- Left: Teams + Payouts stacked -->
         <div class="lg:col-span-2 space-y-8">
           <!-- Teams Section -->
           <section id="teams" class="bg-gray-800 p-6 rounded-xl">
@@ -84,32 +82,14 @@
           </section>
         </div>
 
-        <!-- Right: Giant Trophy with Champions list -->
+        <!-- Trophy Column -->
         <aside class="bg-gradient-to-b from-yellow-500 via-yellow-400 to-yellow-600 rounded-xl p-0 overflow-hidden relative shadow-xl border border-yellow-300/40">
-          <!-- Trophy SVG background watermark -->
-          <svg viewBox="0 0 200 260" class="absolute inset-0 w-full h-full opacity-20">
-            <defs>
-              <linearGradient id="g" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stop-color="#fff"/>
-                <stop offset="100%" stop-color="#000"/>
-              </linearGradient>
-            </defs>
-            <!-- cup -->
-            <path d="M30 40 h140 v40 c0 40-40 70-70 80 c-30-10-70-40-70-80z" fill="#000" fill-opacity="0.2"/>
-            <!-- stem & base -->
-            <rect x="90" y="160" width="20" height="20" fill="#000" fill-opacity="0.2"/>
-            <rect x="60" y="180" width="80" height="20" fill="#000" fill-opacity="0.2"/>
-            <rect x="40" y="200" width="120" height="28" fill="#000" fill-opacity="0.25"/>
-          </svg>
-
           <div class="relative p-6">
             <div class="flex items-center justify-between">
               <h2 class="text-2xl font-extrabold drop-shadow">Champions</h2>
               <span class="text-3xl">🏆</span>
             </div>
-            <p class="text-yellow-950/90 text-sm mt-1">2010 at the bottom → 2026 at the top</p>
             <div class="mt-4 bg-yellow-200/30 rounded-lg p-3 border border-yellow-300/50">
-              <!-- Champions list (top = 2026, bottom = 2010) -->
               <ul class="text-yellow-900 text-sm leading-7 max-h-[70vh] overflow-auto pr-1">
                 <li><span class="font-semibold">2026:</span> —</li>
                 <li><span class="font-semibold">2025:</span> —</li>
@@ -117,24 +97,19 @@
                 <li><span class="font-semibold">2023:</span> PJ Holey</li>
                 <li><span class="font-semibold">2022:</span> —</li>
                 <li><span class="font-semibold">2021:</span> —</li>
-                <li><span class="font-semibold">2020:</span> —</li>
+                <li><span class="font-semibold">2020:</span> Steve Boccelli</li>
                 <li><span class="font-semibold">2019:</span> John Chambers</li>
-                <li><span class="font-semibold">2018:</span> —</li>
-                <li><span class="font-semibold">2017:</span> —</li>
-                <li><span class="font-semibold">2016:</span> —</li>
-                <li><span class="font-semibold">2015:</span> —</li>
-                <li><span class="font-semibold">2014:</span> —</li>
-                <li><span class="font-semibold">2013:</span> —</li>
-                <li><span class="font-semibold">2012:</span> —</li>
-                <li><span class="font-semibold">2011:</span> —</li>
-                <li><span class="font-semibold">2010:</span> —</li>
+                <li><span class="font-semibold">2018:</span> Steven Small</li>
+                <li><span class="font-semibold">2017:</span> Steven Small</li>
+                <li><span class="font-semibold">2016:</span> Matthew McDonald</li>
+                <li><span class="font-semibold">2015:</span> Lenny Kelloway</li>
+                <li><span class="font-semibold">2014:</span> Matthew McDonald</li>
               </ul>
             </div>
           </div>
         </aside>
       </div>
 
-      <!-- BOTTOM ROW: Trade Money & League Votes full width -->
       <!-- Trade Money Section -->
       <section id="trade-money" class="bg-gray-800 p-6 rounded-xl">
         <h2 class="text-2xl font-semibold mb-4">Trade Money Total ($5 per player)</h2>
