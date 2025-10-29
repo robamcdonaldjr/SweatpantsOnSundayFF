@@ -149,9 +149,18 @@
 {
   "meta": { "leagueName": "Sweatpants on Sunday", "season": 2025, "updated": "2025-10-29" },
   "teams": [
-    {"id":1,"name":"McNuggets","manager":"Rob McDonald","logo":"","record":{"wins":5,"losses":3,"ties":0},"pointsFor":987.4,"pointsAgainst":942.1,"streak":"W2","overall":{"wins":72,"losses":49,"ties":0}},
-    {"id":2,"name":"Pumpkin Bombers","manager":"Stacey","logo":"","record":{"wins":6,"losses":2,"ties":0},"pointsFor":1012.6,"pointsAgainst":895.0,"streak":"L1","overall":{"wins":65,"losses":56,"ties":0}},
-    {"id":3,"name":"Coco Crushers","manager":"Hunter","logo":"","record":{"wins":3,"losses":5,"ties":0},"pointsFor":910.0,"pointsAgainst":1008.3,"streak":"W1","overall":{"wins":22,"losses":27,"ties":0}}
+    { "id": 1,  "name": "The McNuggets",                    "manager": "Robert McDonald" },
+    { "id": 2,  "name": "Cooter Claws",                      "manager": "Adam Chambers" },
+    { "id": 3,  "name": "The McAstericks",                   "manager": "Matthew McDonald" },
+    { "id": 4,  "name": "You got a purdy mouth",             "manager": "Brendan Guptill" },
+    { "id": 5,  "name": "Hauk Tua is dead. Rob sucks",       "manager": "Mike Chakoutis" },
+    { "id": 6,  "name": "Toon Squad",                        "manager": "John Chambers" },
+    { "id": 7,  "name": "LUCKY 22",                          "manager": "Steven Boccelli" },
+    { "id": 8,  "name": "Jacking goff in laporta potty",     "manager": "Leonard Kelloway" },
+    { "id": 9,  "name": "Pugnacious Love",                   "manager": "PJ Holey" },
+    { "id": 10, "name": "Bad Boys",                           "manager": "Scott Fiore" },
+    { "id": 11, "name": "Check My Balls",                     "manager": "Steven Small" },
+    { "id": 12, "name": "Bill Croskey's Special Drink",       "manager": "Peter Olson" }
   ],
   "trades": [
     { "date": "Tue Oct 28", "teams": ["Hauk Tua is dead. Rob sucks", "The McAstericks"], "playersMoved": 2 },
@@ -229,38 +238,16 @@
 
       function renderTeams() {
         const q = EL.teamSearch.value.trim().toLowerCase()
-        const list = DATA.teams.filter(t => !q || t.name.toLowerCase().includes(q) || (t.manager||'').toLowerCase().includes(q))
+        const list = DATA.teams.filter(t => !q ||
+          (t.name||'').toLowerCase().includes(q) ||
+          (t.manager||'').toLowerCase().includes(q))
+
         EL.teamsGrid.innerHTML = list.map(t=>`
           <article class="card rounded-2xl border border-white/10 bg-gradient-to-b from-white/10 to-transparent p-4">
-            <div class="flex items-start gap-3">
-              <div class="w-12 h-12 rounded-xl bg-white/10 grid place-items-center text-lg">${(t.name[0]||'?')}</div>
-              <div class="flex-1">
-                <div class="flex items-center justify-between">
-                  <h3 class="font-semibold">${t.name}</h3>
-                  <span class="text-xs px-2 py-1 rounded-lg bg-white/10">${t.streak||''}</span>
-                </div>
-                <p class="text-ink-300 text-sm">Manager: ${t.manager||'—'}</p>
-                <div class="grid grid-cols-2 gap-3 mt-3 text-sm">
-                  <div class="bg-white/5 rounded-xl p-3">
-                    <div class="text-ink-300 text-xs">Current Record</div>
-                    <div class="font-medium">${fmtRecord(t.record)}</div>
-                    <div class="text-ink-300 text-xs">Win% ${(winPct(t.record)*100).toFixed(1)}%</div>
-                  </div>
-                  <div class="bg-white/5 rounded-xl p-3">
-                    <div class="text-ink-300 text-xs">All-Time</div>
-                    <div class="font-medium">${fmtRecord(t.overall)}</div>
-                    <div class="text-ink-300 text-xs">Win% ${(winPct(t.overall)*100).toFixed(1)}%</div>
-                  </div>
-                  <div class="bg-white/5 rounded-xl p-3 col-span-2">
-                    <div class="flex items-center justify-between">
-                      <div><div class="text-ink-300 text-xs">Points For</div><div class="font-medium">${t.pointsFor.toFixed(1)}</div></div>
-                      <div class="text-right"><div class="text-ink-300 text-xs">Points Against</div><div class="font-medium">${t.pointsAgainst.toFixed(1)}</div></div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </article>`).join('')
+            <h3 class="font-semibold">${t.name}</h3>
+            <p class="text-ink-300 text-sm">Manager: ${t.manager||'—'}</p>
+          </article>
+        `).join('')
       }
 
       function renderTrades() {
