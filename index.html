@@ -212,13 +212,23 @@
       function money(n) { return `$${n.toLocaleString(undefined, {maximumFractionDigits:0})}` }
 
       function renderStandings() {
-        const allTime = EL.toggleAllTime.checked
-        const by = EL.standingsSort.value
-        const rows = [...DATA.teams].map(t => {
-          const rec = allTime ? t.overall : t.record
-          return { name: t.name, manager: t.manager, rec, winpct: winPct(rec), pointsFor: t.pointsFor, pointsAgainst: t.pointsAgainst }
-        })
-        rows.sort((a,b)=>{ switch(by){ case 'pointsFor': return b.pointsFor-a.pointsFor; case 'record': return (b.rec.wins-b.rec.losses)-(a.rec.wins-a.rec.losses); case 'name': return a.name.localeCompare(b.name); default: return b.winpct-a.winpct }})
+        const allTime = EL.toggleAllTime.checked;
+        const by = EL.standingsSort.value;
+        const rows = [...(DATA.teams || [])].map(t => {
+          const fallbackRec = { wins: 0, losses: 0, ties: 0 };
+          const rec = allTime ? (t.overall || t.record || fallbackRec) : (t.record || t.overall || fallbackRec);
+          const pf = Number.isFinite(t.pointsFor) ? t.pointsFor : 0;
+          const pa = Number.isFinite(t.pointsAgainst) ? t.pointsAgainst : 0;
+          return {
+            name: t.name || '—',
+            manager: t.manager || '—',
+            rec,
+            winpct: winPct(rec),
+            pointsFor: pf,
+            pointsAgainst: pa
+          };
+        });
+        rows.sort((a,b)=>{ switch(by){ case 'pointsFor': return b.pointsFor-a.pointsFor; case 'record': return (b.rec.wins-b.rec.losses)-(a.rec.wins-a.rec.losses); case 'name': return a.name.localeCompare(b.name); default: return b.winpct-a.winpct }});
         EL.standingsBody.innerHTML = rows.map((r,i)=>`
           <tr class="border-t border-white/10 hover:bg-white/5">
             <td class="py-2 pr-4">${i+1}</td>
@@ -227,7 +237,7 @@
             <td class="py-2 pr-4 text-right">${(r.winpct*100).toFixed(1)}%</td>
             <td class="py-2 pr-4 text-right">${r.pointsFor.toFixed(1)}</td>
             <td class="py-2 pr-4 text-right">${r.pointsAgainst.toFixed(1)}</td>
-          </tr>`).join('')
+          </tr>`).join('');
       }
 
       function renderTeams() {
