@@ -54,6 +54,16 @@
         </div>
 
         <!-- Trades Bank (no importer, just your accepted trades hard-coded) -->
+        <!-- Teams (restored and placed at the top) -->
+        <div class="card rounded-2xl bg-white/5 p-5 border border-white/10">
+          <div class="flex items-center justify-between">
+            <h2 class="text-lg font-semibold">Teams</h2>
+            <input id="teamSearch" class="bg-white/10 rounded-xl px-3 py-2 text-sm outline-none" placeholder="Search teams or managers…" />
+          </div>
+          <div id="teamsGrid" class="mt-4 grid sm:grid-cols-2 xl:grid-cols-3 gap-4"></div>
+        </div>
+
+        <!-- Trades Bank -->
         <div class="card rounded-2xl bg-white/5 p-5 border border-white/10" id="trades">
           <div class="flex flex-wrap items-center justify-between gap-3">
             <h2 class="text-lg font-semibold">Trade Money Total ($5 per player in a trade)</h2>
