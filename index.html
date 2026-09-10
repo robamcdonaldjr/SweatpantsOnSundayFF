@@ -1,236 +1,576 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Sweatpants on Sunday — League Hub</title>
-    <meta name="description" content="Fantasy Football League hub: teams, records, stats, trades bank, payouts." />
-    <script src="https://cdn.tailwindcss.com"></script>
-  </head>
-  <body class="bg-gray-900 text-white min-h-screen">
-    <header class="p-4 text-center bg-gray-800 text-xl font-bold">Sweatpants on Sunday — League Hub</header>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Sweatpants on Sunday — League Hub</title>
+  <meta name="description" content="Fantasy Football League hub: teams, records, stats, trade bank, payouts, and voting." />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    /* Custom scrollbar for trophy column */
+    .custom-scrollbar::-webkit-scrollbar {
+      width: 6px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-track {
+      background: rgba(0, 0, 0, 0.1);
+      border-radius: 4px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background: rgba(161, 98, 7, 0.4);
+      border-radius: 4px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+      background: rgba(161, 98, 7, 0.7);
+    }
+  </style>
+</head>
+<body class="bg-gray-900 text-white min-h-screen font-sans antialiased">
 
-    <main class="max-w-6xl mx-auto p-6 space-y-8">
-      <div class="grid lg:grid-cols-3 gap-8">
-        <div class="lg:col-span-2 space-y-8">
-          <!-- Teams Section -->
-          <section id="teams" class="bg-gray-800 p-6 rounded-xl">
-            <h2 class="text-2xl font-semibold mb-4">Teams</h2>
-            <div id="teamsGrid" class="grid sm:grid-cols-2 xl:grid-cols-3 gap-4">
-              <div class="card bg-gray-700 p-4 rounded-xl">
-                <h3 class="font-semibold">The McNuggets</h3>
-                <p class="text-gray-300 text-sm">Manager: Robert McDonald</p>
-              </div>
-              <div class="card bg-gray-700 p-4 rounded-xl">
-                <h3 class="font-semibold">Cooter Claws</h3>
-                <p class="text-gray-300 text-sm">Manager: Adam Chambers</p>
-              </div>
-              <div class="card bg-gray-700 p-4 rounded-xl">
-                <h3 class="font-semibold">The McAstericks</h3>
-                <p class="text-gray-300 text-sm">Manager: Matthew McDonald</p>
-              </div>
-              <div class="card bg-gray-700 p-4 rounded-xl">
-                <h3 class="font-semibold">You got a purdy mouth</h3>
-                <p class="text-gray-300 text-sm">Manager: Brendan Guptill</p>
-              </div>
-              <div class="card bg-gray-700 p-4 rounded-xl">
-                <h3 class="font-semibold">Hauk Tua is dead. Rob sucks</h3>
-                <p class="text-gray-300 text-sm">Manager: Mike Chakoutis</p>
-              </div>
-              <div class="card bg-gray-700 p-4 rounded-xl">
-                <h3 class="font-semibold">Toon Squad</h3>
-                <p class="text-gray-300 text-sm">Manager: John Chambers</p>
-              </div>
-              <div class="card bg-gray-700 p-4 rounded-xl">
-                <h3 class="font-semibold">LUCKY 22</h3>
-                <p class="text-gray-300 text-sm">Manager: Steven Boccelli</p>
-              </div>
-              <div class="card bg-gray-700 p-4 rounded-xl">
-                <h3 class="font-semibold">Jacking goff in laporta potty</h3>
-                <p class="text-gray-300 text-sm">Manager: Leonard Kelloway</p>
-              </div>
-              <div class="card bg-gray-700 p-4 rounded-xl">
-                <h3 class="font-semibold">Pugnacious Love</h3>
-                <p class="text-gray-300 text-sm">Manager: PJ Holey</p>
-              </div>
-              <div class="card bg-gray-700 p-4 rounded-xl">
-                <h3 class="font-semibold">Bad Boys</h3>
-                <p class="text-gray-300 text-sm">Manager: Scott Fiore</p>
-              </div>
-              <div class="card bg-gray-700 p-4 rounded-xl">
-                <h3 class="font-semibold">Check My Balls</h3>
-                <p class="text-gray-300 text-sm">Manager: Steven Small</p>
-              </div>
-              <div class="card bg-gray-700 p-4 rounded-xl">
-                <h3 class="font-semibold">Bill Croskey's Special Drink</h3>
-                <p class="text-gray-300 text-sm">Manager: Peter Olson</p>
-              </div>
-            </div>
-          </section>
-
-          <!-- Payouts Section -->
-          <section id="payouts" class="bg-gray-800 p-6 rounded-xl">
-            <h2 class="text-2xl font-semibold mb-4">Payouts</h2>
-            <p class="text-gray-300 text-sm mb-4">Each team pays a <span class='text-yellow-400 font-semibold'>$150 buy-in</span> at the start of the season. All funds go toward league prizes and are paid to the winners at the end of the season.</p>
-            <ul class="list-disc list-inside text-gray-300 space-y-1 mb-2">
-              <li>Champion: $1350 (Playoff Winner)</li>
-              <li>Runner-up: $300 (Loses in Finals)</li>
-              <li>Regular Season Points Leader: $150 (Most PF after Week 14)</li>
-              <li>Weekly High Score: $70 (Paid each week)</li>
-              <li>Trade money: $80 (Highest points for induvidual player in the last week)</li>
-            </ul>
-          </section>
+  <!-- Sticky Header & Nav -->
+  <header class="sticky top-0 z-50 bg-gray-800/95 backdrop-blur border-b border-gray-700 shadow-lg">
+    <div class="max-w-6xl mx-auto px-4 py-4 flex flex-col sm:flex-row items-center justify-between gap-4">
+      <div class="flex items-center space-x-3">
+        <span class="text-3xl">🏈</span>
+        <div>
+          <h1 class="text-xl font-extrabold tracking-tight text-white">Sweatpants on Sunday</h1>
+          <p class="text-xs text-yellow-400 font-semibold tracking-wider uppercase">Official League Hub</p>
         </div>
+      </div>
+      <nav class="flex items-center space-x-1 sm:space-x-2 text-xs sm:text-sm">
+        <a href="#payouts" class="px-3 py-1.5 rounded-lg text-gray-300 hover:text-white hover:bg-gray-700 transition">Payouts</a>
+        <a href="#trade-money" class="px-3 py-1.5 rounded-lg text-gray-300 hover:text-white hover:bg-gray-700 transition">Trade Bank</a>
+        <a href="#votes" class="px-3 py-1.5 rounded-lg text-gray-300 hover:text-white hover:bg-gray-700 transition">Proposals</a>
+        <a href="#teams" class="px-3 py-1.5 rounded-lg text-gray-300 hover:text-white hover:bg-gray-700 transition">Teams</a>
+      </nav>
+    </div>
+  </header>
 
-        <!-- Trophy Column -->
-        <aside class="bg-gradient-to-b from-yellow-500 via-yellow-400 to-yellow-600 rounded-xl p-0 overflow-hidden relative shadow-xl border border-yellow-300/40">
-          <div class="relative p-6">
-            <div class="flex items-center justify-between">
-              <h2 class="text-2xl font-extrabold drop-shadow">Champions</h2>
-              <span class="text-3xl">🏆</span>
+  <main class="max-w-6xl mx-auto p-4 sm:p-6 space-y-8">
+
+    <!-- Top Grid: Payouts & Champions Column -->
+    <div class="grid lg:grid-cols-3 gap-8">
+      
+      <!-- Left Column (Payouts) -->
+      <div class="lg:col-span-2 space-y-8">
+        <!-- Payouts Section -->
+        <section id="payouts" class="bg-gray-800 p-6 rounded-xl border border-gray-700/60 shadow-md">
+          <div class="flex items-center justify-between mb-4 border-b border-gray-700 pb-3">
+            <div>
+              <h2 class="text-2xl font-bold text-white flex items-center gap-2">
+                <span>💰</span> Season Payouts
+              </h2>
+              <p class="text-xs text-gray-400 mt-1">12 Teams @ $150 Buy-In = $1,800 Total Prize Pool</p>
             </div>
-            <div class="mt-4 bg-yellow-200/30 rounded-lg p-3 border border-yellow-300/50">
-              <ul class="text-yellow-900 text-sm leading-7 max-h-[70vh] overflow-auto pr-1">
-                <li><span class="font-semibold">2026:</span> —</li>
-                <li><span class="font-semibold">2025:</span> —</li>
-                <li><span class="font-semibold">2024:</span> Brendan Guptill</li>
-                <li><span class="font-semibold">2023:</span> PJ Holey</li>
-                <li><span class="font-semibold">2022:</span> Bob G.</li>
-                <li><span class="font-semibold">2021:</span> Mike Chakoutis</li>
-                <li><span class="font-semibold">2020:</span> Steve Boccelli</li>
-                <li><span class="font-semibold">2019:</span> John Chambers</li>
-                <li><span class="font-semibold">2018:</span> Steven Small</li>
-                <li><span class="font-semibold">2017:</span> Steven Small</li>
-                <li><span class="font-semibold">2016:</span> Matthew McDonald</li>
-                <li><span class="font-semibold">2015:</span> Lenny Kelloway</li>
-                <li><span class="font-semibold">2014:</span> Matthew McDonald</li>
-              </ul>
+            <span class="bg-yellow-400/10 text-yellow-400 border border-yellow-400/30 text-xs font-bold px-3 py-1 rounded-full">
+              $150 Buy-In
+            </span>
+          </div>
+
+          <p class="text-gray-300 text-sm mb-6 leading-relaxed">
+            All buy-ins are collected before draft day and held in the league bank. Full payouts are distributed immediately following the championship week.
+          </p>
+
+          <div class="grid sm:grid-cols-2 gap-4 mb-4">
+            <!-- Champion -->
+            <div class="bg-gray-700/60 p-4 rounded-lg border border-yellow-500/30 relative overflow-hidden">
+              <div class="absolute right-2 top-2 text-4xl opacity-10">🏆</div>
+              <span class="text-xs font-bold text-yellow-400 uppercase tracking-wider">Playoff Winner</span>
+              <h3 class="text-xl font-bold text-white mt-1">League Champion</h3>
+              <p class="text-2xl font-black text-yellow-400 mt-2">$1,350</p>
+            </div>
+            <!-- Runner-Up -->
+            <div class="bg-gray-700/60 p-4 rounded-lg border border-gray-600/50 relative overflow-hidden">
+              <div class="absolute right-2 top-2 text-4xl opacity-10">🥈</div>
+              <span class="text-xs font-bold text-gray-400 uppercase tracking-wider">Playoff Runner-Up</span>
+              <h3 class="text-xl font-bold text-white mt-1">2nd Place</h3>
+              <p class="text-2xl font-black text-gray-200 mt-2">$300</p>
             </div>
           </div>
-        </aside>
+
+          <!-- Secondary Prizes List -->
+          <div class="bg-gray-900/50 p-4 rounded-lg border border-gray-700/50 space-y-3">
+            <h4 class="text-xs font-semibold text-gray-400 uppercase tracking-wider border-b border-gray-700 pb-2">Bonus & Special Prizes</h4>
+            
+            <div class="flex justify-between items-center text-sm">
+              <div class="flex items-center gap-2">
+                <span class="text-base">📈</span>
+                <span class="text-gray-200 font-medium">Regular Season Points Leader</span>
+              </div>
+              <span class="font-bold text-yellow-400">$150 <span class="text-xs text-gray-400 font-normal">(Most PF after Wk 14)</span></span>
+            </div>
+
+            <div class="flex justify-between items-center text-sm pt-2 border-t border-gray-800">
+              <div class="flex items-center gap-2">
+                <span class="text-base">⚡</span>
+                <span class="text-gray-200 font-medium">Weekly High Score</span>
+              </div>
+              <span class="font-bold text-yellow-400">$70 <span class="text-xs text-gray-400 font-normal">(Paid each week)</span></span>
+            </div>
+
+            <div class="flex justify-between items-center text-sm pt-2 border-t border-gray-800">
+              <div class="flex items-center gap-2">
+                <span class="text-base">🔄</span>
+                <span class="text-gray-200 font-medium">Trade Money Bonus</span>
+              </div>
+              <span class="font-bold text-yellow-400">$80 <span class="text-xs text-gray-400 font-normal">(Top single-player score Wk 14)</span></span>
+            </div>
+          </div>
+        </section>
       </div>
 
-      <!-- Trade Money Section -->
-      <section id="trade-money" class="bg-gray-800 p-6 rounded-xl">
-        <h2 class="text-2xl font-semibold mb-4">Trade Money Total ($5 per player)</h2>
-        <table class="w-full text-left border-collapse">
+      <!-- Right Column (Trophy / Champions) -->
+      <aside class="bg-gradient-to-b from-yellow-500 via-yellow-400 to-yellow-600 rounded-xl p-0 overflow-hidden relative shadow-2xl border border-yellow-300/40 flex flex-col justify-between">
+        <div class="relative p-6">
+          <div class="flex items-center justify-between border-b border-yellow-900/20 pb-4">
+            <div>
+              <h2 class="text-2xl font-black text-yellow-950 drop-shadow-sm tracking-tight uppercase">Hall of Fame</h2>
+              <p class="text-xs text-yellow-900 font-medium">League Champions (2014–Present)</p>
+            </div>
+            <span class="text-4xl drop-shadow-md">🏆</span>
+          </div>
+
+          <div class="mt-4 bg-yellow-200/40 rounded-lg p-3 border border-yellow-300/60 backdrop-blur-sm">
+            <ul class="text-yellow-950 text-sm leading-8 max-h-[380px] overflow-y-auto pr-2 custom-scrollbar font-medium divide-y divide-yellow-900/10">
+              <li class="flex justify-between items-center py-1">
+                <span class="font-bold text-yellow-900">2026</span>
+                <span class="text-yellow-800 italic">In Progress</span>
+              </li>
+              <li class="flex justify-between items-center py-1">
+                <span class="font-bold text-yellow-900">2025</span>
+                <span class="text-yellow-800 italic">TBD</span>
+              </li>
+              <li class="flex justify-between items-center py-1">
+                <span class="font-bold text-yellow-950">2024</span>
+                <span class="font-bold bg-yellow-400/80 px-2 py-0.5 rounded text-yellow-950 shadow-sm">Brendan Guptill</span>
+              </li>
+              <li class="flex justify-between items-center py-1">
+                <span class="font-bold text-yellow-900">2023</span>
+                <span>PJ Holey</span>
+              </li>
+              <li class="flex justify-between items-center py-1">
+                <span class="font-bold text-yellow-900">2022</span>
+                <span>Bob G.</span>
+              </li>
+              <li class="flex justify-between items-center py-1">
+                <span class="font-bold text-yellow-900">2021</span>
+                <span>Mike Chakoutis</span>
+              </li>
+              <li class="flex justify-between items-center py-1">
+                <span class="font-bold text-yellow-900">2020</span>
+                <span>Steve Boccelli</span>
+              </li>
+              <li class="flex justify-between items-center py-1">
+                <span class="font-bold text-yellow-900">2019</span>
+                <span>John Chambers</span>
+              </li>
+              <li class="flex justify-between items-center py-1">
+                <span class="font-bold text-yellow-900">2018</span>
+                <span>Steven Small</span>
+              </li>
+              <li class="flex justify-between items-center py-1">
+                <span class="font-bold text-yellow-900">2017</span>
+                <span>Steven Small</span>
+              </li>
+              <li class="flex justify-between items-center py-1">
+                <span class="font-bold text-yellow-900">2016</span>
+                <span>Matthew McDonald</span>
+              </li>
+              <li class="flex justify-between items-center py-1">
+                <span class="font-bold text-yellow-900">2015</span>
+                <span>Lenny Kelloway</span>
+              </li>
+              <li class="flex justify-between items-center py-1">
+                <span class="font-bold text-yellow-900">2014</span>
+                <span>Matthew McDonald</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div class="bg-yellow-600/40 p-3 text-center text-xs font-bold text-yellow-950 border-t border-yellow-400/30">
+          ⭐ 11 Seasons of Champions ⭐
+        </div>
+      </aside>
+
+    </div>
+
+    <!-- Trade Money Section -->
+    <section id="trade-money" class="bg-gray-800 p-6 rounded-xl border border-gray-700/60 shadow-md">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4 border-b border-gray-700 pb-4">
+        <div>
+          <h2 class="text-2xl font-bold text-white flex items-center gap-2">
+            <span>🤝</span> Trade Money Log
+          </h2>
+          <p class="text-xs text-gray-400 mt-1">Fee: $5 per player involved in a completed trade</p>
+        </div>
+        <div class="flex items-center gap-3 bg-gray-900/60 px-4 py-2 rounded-lg border border-gray-700">
+          <span class="text-xs text-gray-400 uppercase font-bold tracking-wider">Total Accumulated:</span>
+          <span class="text-xl font-black text-green-400" id="tradeTotalDisplay">$80</span>
+        </div>
+      </div>
+
+      <div class="overflow-x-auto">
+        <table class="w-full text-left border-collapse text-sm">
           <thead>
-            <tr class="border-b border-gray-700">
-              <th class="p-2">Date</th>
-              <th class="p-2">Teams</th>
-              <th class="p-2 text-right">Players Moved</th>
-              <th class="p-2 text-right">Amount</th>
+            <tr class="border-b border-gray-700 text-gray-400 uppercase text-xs">
+              <th class="p-3">Date</th>
+              <th class="p-3">Trade Details</th>
+              <th class="p-3 text-right">Players Moved</th>
+              <th class="p-3 text-right">Fee Added</th>
             </tr>
           </thead>
-          <tbody>
-            <tr class="border-b border-gray-700">
-              <td class="p-2">Tue Oct 28</td>
-              <td class="p-2">Hauk Tua is dead. Rob sucks ⇄ The McAstericks</td>
-              <td class="p-2 text-right">2</td>
-              <td class="p-2 text-right">$10</td>
+          <tbody class="divide-y divide-gray-700/50 text-gray-200">
+            <tr class="hover:bg-gray-700/30 transition">
+              <td class="p-3 font-medium text-gray-400">Tue Oct 28</td>
+              <td class="p-3 font-semibold text-white">Hauk Tua is dead. Rob sucks <span class="text-yellow-400 mx-1">⇄</span> The McAstericks</td>
+              <td class="p-3 text-right">2</td>
+              <td class="p-3 text-right font-bold text-green-400">$10</td>
             </tr>
-            <tr class="border-b border-gray-700">
-              <td class="p-2">Wed Oct 22</td>
-              <td class="p-2">You got a purdy mouth ⇄ Cooter Claws</td>
-              <td class="p-2 text-right">5</td>
-              <td class="p-2 text-right">$25</td>
+            <tr class="hover:bg-gray-700/30 transition">
+              <td class="p-3 font-medium text-gray-400">Wed Oct 22</td>
+              <td class="p-3 font-semibold text-white">You got a purdy mouth <span class="text-yellow-400 mx-1">⇄</span> Cooter Claws</td>
+              <td class="p-3 text-right">5</td>
+              <td class="p-3 text-right font-bold text-green-400">$25</td>
             </tr>
-            <tr class="border-b border-gray-700">
-              <td class="p-2">Wed Oct 1</td>
-              <td class="p-2">Bill Croskey's Special Drink ⇄ Check My Balls</td>
-              <td class="p-2 text-right">4</td>
-              <td class="p-2 text-right">$20</td>
+            <tr class="hover:bg-gray-700/30 transition">
+              <td class="p-3 font-medium text-gray-400">Wed Oct 1</td>
+              <td class="p-3 font-semibold text-white">Bill Croskey's Special Drink <span class="text-yellow-400 mx-1">⇄</span> Check My Balls</td>
+              <td class="p-3 text-right">4</td>
+              <td class="p-3 text-right font-bold text-green-400">$20</td>
             </tr>
-            <tr class="border-b border-gray-700">
-              <td class="p-2">Tue Sep 23</td>
-              <td class="p-2">Check My Balls ⇄ The McNuggets</td>
-              <td class="p-2 text-right">3</td>
-              <td class="p-2 text-right">$15</td>
+            <tr class="hover:bg-gray-700/30 transition">
+              <td class="p-3 font-medium text-gray-400">Tue Sep 23</td>
+              <td class="p-3 font-semibold text-white">Check My Balls <span class="text-yellow-400 mx-1">⇄</span> The McNuggets</td>
+              <td class="p-3 text-right">3</td>
+              <td class="p-3 text-right font-bold text-green-400">$15</td>
             </tr>
-            <tr class="border-b border-gray-700">
-              <td class="p-2">Tue Sep 16</td>
-              <td class="p-2">Hauk Tua is dead. Rob sucks ⇄ You got a purdy mouth</td>
-              <td class="p-2 text-right">2</td>
-              <td class="p-2 text-right">$10</td>
+            <tr class="hover:bg-gray-700/30 transition">
+              <td class="p-3 font-medium text-gray-400">Tue Sep 16</td>
+              <td class="p-3 font-semibold text-white">Hauk Tua is dead. Rob sucks <span class="text-yellow-400 mx-1">⇄</span> You got a purdy mouth</td>
+              <td class="p-3 text-right">2</td>
+              <td class="p-3 text-right font-bold text-green-400">$10</td>
             </tr>
           </tbody>
           <tfoot>
-            <tr class="border-t border-gray-700 font-semibold">
-              <td class="p-2" colspan="3">Total</td>
-              <td class="p-2 text-right">$80</td>
+            <tr class="border-t-2 border-gray-700 font-bold text-white bg-gray-900/40">
+              <td class="p-3" colspan="3">Total Trade Pot</td>
+              <td class="p-3 text-right text-base text-green-400 font-black">$80</td>
             </tr>
           </tfoot>
         </table>
-      </section>
+      </div>
+    </section>
 
-      <!-- League Votes Section -->
-      <section id="votes" class="bg-gray-800 p-6 rounded-xl">
-        <div class="border-b border-gray-700 pb-4 mb-6">
-          <h2 class="text-2xl font-semibold mb-2">League Votes for Upcoming Season</h2>
-          <p class="text-gray-300 text-sm leading-relaxed">
-            Each offseason, managers can propose rule or format changes. Submit ideas to <span class="text-yellow-400 font-semibold">Adam</span>, who tracks all proposals and organizes official polls in the group chat before draft day.
+    <!-- League Votes Section -->
+    <section id="votes" class="bg-gray-800 p-6 rounded-xl border border-gray-700/60 shadow-md">
+      <div class="border-b border-gray-700 pb-4 mb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <h2 class="text-2xl font-bold text-white flex items-center gap-2">
+            <span>🗳️</span> Offseason Rule Proposals
+          </h2>
+          <p class="text-xs text-gray-300 mt-1 leading-relaxed">
+            All managers can propose changes. Vote in the group chat or click below to simulate live league voting.
           </p>
         </div>
+        <span class="bg-blue-500/10 text-blue-400 border border-blue-500/30 text-xs font-semibold px-3 py-1.5 rounded-lg self-start sm:self-center">
+          Commissioner: Adam Chambers
+        </span>
+      </div>
 
-        <div class="grid md:grid-cols-2 gap-4">
-          <!-- Proposal 1 -->
-          <div class="bg-gray-700 p-4 rounded-lg flex flex-col justify-between">
-            <div>
-              <div class="flex items-center justify-between mb-2">
-                <span class="text-xs font-bold text-yellow-400 uppercase tracking-wider">Proposal 1</span>
-                <span class="bg-yellow-400/10 text-yellow-400 text-xs px-2 py-0.5 rounded border border-yellow-400/20 font-medium">Pending Poll</span>
-              </div>
-              <h3 class="font-medium text-white">Shuffle schedules at the start of every season?</h3>
-            </div>
-          </div>
+      <div class="grid md:grid-cols-2 gap-6" id="proposalsGrid">
+        <!-- Dynamic proposal cards generated via JS -->
+      </div>
+    </section>
 
-          <!-- Proposal 2 -->
-          <div class="bg-gray-700 p-4 rounded-lg flex flex-col justify-between">
-            <div>
-              <div class="flex items-center justify-between mb-2">
-                <span class="text-xs font-bold text-yellow-400 uppercase tracking-wider">Proposal 2</span>
-                <span class="bg-yellow-400/10 text-yellow-400 text-xs px-2 py-0.5 rounded border border-yellow-400/20 font-medium">Pending Poll</span>
-              </div>
-              <h3 class="font-medium text-white">Move away from the ESPN app?</h3>
-            </div>
-            <p class="text-xs text-gray-400 mt-3 pt-2 border-t border-gray-600/50">
-              *If passed, a follow-up vote will determine the new platform.
-            </p>
-          </div>
+    <!-- Teams Section (Moved to Bottom as Requested) -->
+    <section id="teams" class="bg-gray-800 p-6 rounded-xl border border-gray-700/60 shadow-md">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6 border-b border-gray-700 pb-4">
+        <div>
+          <h2 class="text-2xl font-bold text-white flex items-center gap-2">
+            <span>🛡️</span> League Managers & Teams
+          </h2>
+          <p class="text-xs text-gray-400 mt-1">12 Franchises competing in the 2026 Season</p>
+        </div>
+        <div class="relative w-full sm:w-64">
+          <input 
+            type="text" 
+            id="teamSearch" 
+            placeholder="Search team or manager..." 
+            class="w-full bg-gray-900 text-sm text-white placeholder-gray-500 rounded-lg px-3 py-2 border border-gray-700 focus:outline-none focus:border-yellow-400 transition"
+            onkeyup="filterTeams()"
+          />
+        </div>
+      </div>
 
-          <!-- Proposal 3 -->
-          <div class="bg-gray-700 p-4 rounded-lg flex flex-col justify-between">
+      <div id="teamsGrid" class="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+        <div class="team-card bg-gray-700/60 p-4 rounded-xl border border-gray-600/40 hover:border-yellow-400/50 transition duration-200">
+          <div class="flex items-center space-x-3">
+            <div class="w-10 h-10 rounded-full bg-yellow-400/20 text-yellow-400 flex items-center justify-center font-bold text-lg">RM</div>
             <div>
-              <div class="flex items-center justify-between mb-2">
-                <span class="text-xs font-bold text-yellow-400 uppercase tracking-wider">Proposal 3</span>
-                <span class="bg-yellow-400/10 text-yellow-400 text-xs px-2 py-0.5 rounded border border-yellow-400/20 font-medium">Pending Poll</span>
-              </div>
-              <h3 class="font-medium text-white mb-2">Remove the Kicker position?</h3>
-              <ul class="text-xs text-gray-300 space-y-1 list-disc list-inside bg-gray-800/50 p-2.5 rounded border border-gray-600/30">
-                <li>If removed: Vote on adding an extra FLEX or no FLEX.</li>
-                <li>If kept: Roster settings remain unchanged.</li>
-              </ul>
-            </div>
-          </div>
-
-          <!-- Proposal 4 -->
-          <div class="bg-gray-700 p-4 rounded-lg flex flex-col justify-between">
-            <div>
-              <div class="flex items-center justify-between mb-2">
-                <span class="text-xs font-bold text-yellow-400 uppercase tracking-wider">Proposal 4</span>
-                <span class="bg-yellow-400/10 text-yellow-400 text-xs px-2 py-0.5 rounded border border-yellow-400/20 font-medium">Pending Poll</span>
-              </div>
-              <h3 class="font-medium text-white mb-2">Implement 1 Keeper per team?</h3>
-              <ul class="text-xs text-gray-300 space-y-1 list-disc list-inside bg-gray-800/50 p-2.5 rounded border border-gray-600/30">
-                <li>Cost: Penalty of 1 round higher than drafted (e.g., 2nd-round player costs 1st-round pick).</li>
-                <li>Limit: A player can only be kept once.</li>
-              </ul>
+              <h3 class="font-bold text-white text-base">The McNuggets</h3>
+              <p class="text-gray-300 text-xs">Manager: Robert McDonald</p>
             </div>
           </div>
         </div>
-      </section>
-    </main>
 
-    <footer class="text-center py-4 text-gray-400 text-sm">Built for our league ✌️</footer>
-  </body>
+        <div class="team-card bg-gray-700/60 p-4 rounded-xl border border-gray-600/40 hover:border-yellow-400/50 transition duration-200">
+          <div class="flex items-center space-x-3">
+            <div class="w-10 h-10 rounded-full bg-blue-400/20 text-blue-400 flex items-center justify-center font-bold text-lg">AC</div>
+            <div>
+              <h3 class="font-bold text-white text-base">Cooter Claws</h3>
+              <p class="text-gray-300 text-xs">Manager: Adam Chambers</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="team-card bg-gray-700/60 p-4 rounded-xl border border-gray-600/40 hover:border-yellow-400/50 transition duration-200">
+          <div class="flex items-center space-x-3">
+            <div class="w-10 h-10 rounded-full bg-green-400/20 text-green-400 flex items-center justify-center font-bold text-lg">MM</div>
+            <div>
+              <h3 class="font-bold text-white text-base">The McAstericks</h3>
+              <p class="text-gray-300 text-xs">Manager: Matthew McDonald</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="team-card bg-gray-700/60 p-4 rounded-xl border border-gray-600/40 hover:border-yellow-400/50 transition duration-200">
+          <div class="flex items-center space-x-3">
+            <div class="w-10 h-10 rounded-full bg-purple-400/20 text-purple-400 flex items-center justify-center font-bold text-lg">BG</div>
+            <div>
+              <h3 class="font-bold text-white text-base">You got a purdy mouth</h3>
+              <p class="text-gray-300 text-xs">Manager: Brendan Guptill</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="team-card bg-gray-700/60 p-4 rounded-xl border border-gray-600/40 hover:border-yellow-400/50 transition duration-200">
+          <div class="flex items-center space-x-3">
+            <div class="w-10 h-10 rounded-full bg-red-400/20 text-red-400 flex items-center justify-center font-bold text-lg">MC</div>
+            <div>
+              <h3 class="font-bold text-white text-base">Hauk Tua is dead. Rob sucks</h3>
+              <p class="text-gray-300 text-xs">Manager: Mike Chakoutis</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="team-card bg-gray-700/60 p-4 rounded-xl border border-gray-600/40 hover:border-yellow-400/50 transition duration-200">
+          <div class="flex items-center space-x-3">
+            <div class="w-10 h-10 rounded-full bg-indigo-400/20 text-indigo-400 flex items-center justify-center font-bold text-lg">JC</div>
+            <div>
+              <h3 class="font-bold text-white text-base">Toon Squad</h3>
+              <p class="text-gray-300 text-xs">Manager: John Chambers</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="team-card bg-gray-700/60 p-4 rounded-xl border border-gray-600/40 hover:border-yellow-400/50 transition duration-200">
+          <div class="flex items-center space-x-3">
+            <div class="w-10 h-10 rounded-full bg-yellow-400/20 text-yellow-400 flex items-center justify-center font-bold text-lg">SB</div>
+            <div>
+              <h3 class="font-bold text-white text-base">LUCKY 22</h3>
+              <p class="text-gray-300 text-xs">Manager: Steven Boccelli</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="team-card bg-gray-700/60 p-4 rounded-xl border border-gray-600/40 hover:border-yellow-400/50 transition duration-200">
+          <div class="flex items-center space-x-3">
+            <div class="w-10 h-10 rounded-full bg-pink-400/20 text-pink-400 flex items-center justify-center font-bold text-lg">LK</div>
+            <div>
+              <h3 class="font-bold text-white text-base">Jacking goff in laporta potty</h3>
+              <p class="text-gray-300 text-xs">Manager: Leonard Kelloway</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="team-card bg-gray-700/60 p-4 rounded-xl border border-gray-600/40 hover:border-yellow-400/50 transition duration-200">
+          <div class="flex items-center space-x-3">
+            <div class="w-10 h-10 rounded-full bg-emerald-400/20 text-emerald-400 flex items-center justify-center font-bold text-lg">PH</div>
+            <div>
+              <h3 class="font-bold text-white text-base">Pugnacious Love</h3>
+              <p class="text-gray-300 text-xs">Manager: PJ Holey</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="team-card bg-gray-700/60 p-4 rounded-xl border border-gray-600/40 hover:border-yellow-400/50 transition duration-200">
+          <div class="flex items-center space-x-3">
+            <div class="w-10 h-10 rounded-full bg-orange-400/20 text-orange-400 flex items-center justify-center font-bold text-lg">SF</div>
+            <div>
+              <h3 class="font-bold text-white text-base">Bad Boys</h3>
+              <p class="text-gray-300 text-xs">Manager: Scott Fiore</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="team-card bg-gray-700/60 p-4 rounded-xl border border-gray-600/40 hover:border-yellow-400/50 transition duration-200">
+          <div class="flex items-center space-x-3">
+            <div class="w-10 h-10 rounded-full bg-teal-400/20 text-teal-400 flex items-center justify-center font-bold text-lg">SS</div>
+            <div>
+              <h3 class="font-bold text-white text-base">Check My Balls</h3>
+              <p class="text-gray-300 text-xs">Manager: Steven Small</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="team-card bg-gray-700/60 p-4 rounded-xl border border-gray-600/40 hover:border-yellow-400/50 transition duration-200">
+          <div class="flex items-center space-x-3">
+            <div class="w-10 h-10 rounded-full bg-cyan-400/20 text-cyan-400 flex items-center justify-center font-bold text-lg">PO</div>
+            <div>
+              <h3 class="font-bold text-white text-base">Bill Croskey's Special Drink</h3>
+              <p class="text-gray-300 text-xs">Manager: Peter Olson</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="border-t border-gray-800 text-center py-6 text-gray-400 text-xs mt-12 bg-gray-900">
+    <p>Built for Sweatpants on Sunday Fantasy Football League ✌️</p>
+  </footer>
+
+  <!-- Voting Logic & Interactive Features -->
+  <script>
+    // Initial Proposal Data
+    const proposals = [
+      {
+        id: 1,
+        title: "Shuffle schedules at the start of every season?",
+        subtext: "Randomizes match schedules each offseason rather than maintaining static rotations.",
+        yes: 7,
+        no: 3,
+        userVote: null
+      },
+      {
+        id: 2,
+        title: "Move away from the ESPN app?",
+        subtext: "If passed, a follow-up vote will decide the replacement platform (Sleeper, Yahoo, etc.).",
+        yes: 9,
+        no: 2,
+        userVote: null
+      },
+      {
+        id: 3,
+        title: "Remove the Kicker position?",
+        subtext: "If removed, a secondary vote will decide whether to add a FLEX spot or keep roster size.",
+        yes: 4,
+        no: 6,
+        userVote: null
+      },
+      {
+        id: 4,
+        title: "Implement 1 Keeper per team?",
+        subtext: "Cost: Penalty of 1 round higher than drafted. Players can only be kept once consecutively.",
+        yes: 8,
+        no: 4,
+        userVote: null
+      }
+    ];
+
+    function renderProposals() {
+      const container = document.getElementById('proposalsGrid');
+      container.innerHTML = '';
+
+      proposals.forEach((p) => {
+        const totalVotes = p.yes + p.no;
+        const yesPercent = totalVotes > 0 ? Math.round((p.yes / totalVotes) * 100) : 0;
+        const noPercent = totalVotes > 0 ? Math.round((p.no / totalVotes) * 100) : 0;
+        const isPassing = p.yes > p.no;
+
+        const card = document.createElement('div');
+        card.className = "bg-gray-700/50 border border-gray-600/50 p-5 rounded-xl flex flex-col justify-between shadow-sm hover:border-gray-500 transition";
+
+        card.innerHTML = `
+          <div>
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-xs font-bold text-yellow-400 uppercase tracking-wider">Proposal #${p.id}</span>
+              <span class="text-xs font-semibold px-2 py-0.5 rounded border ${isPassing ? 'bg-green-500/10 text-green-400 border-green-500/30' : 'bg-red-500/10 text-red-400 border-red-500/30'}">
+                ${isPassing ? 'Currently Passing' : 'Currently Failing'}
+              </span>
+            </div>
+            
+            <h3 class="font-bold text-white text-base mb-1">${p.title}</h3>
+            <p class="text-xs text-gray-300 leading-relaxed mb-4">${p.subtext}</p>
+          </div>
+
+          <div>
+            <!-- Progress Bar -->
+            <div class="space-y-1 mb-3">
+              <div class="flex justify-between text-xs font-semibold">
+                <span class="text-green-400">Yes: ${p.yes} (${yesPercent}%)</span>
+                <span class="text-red-400">No: ${p.no} (${noPercent}%)</span>
+              </div>
+              <div class="w-full bg-gray-800 h-2.5 rounded-full overflow-hidden flex">
+                <div class="bg-green-500 transition-all duration-300" style="width: ${yesPercent}%"></div>
+                <div class="bg-red-500 transition-all duration-300" style="width: ${noPercent}%"></div>
+              </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="flex items-center gap-2 pt-3 border-t border-gray-600/40">
+              <button 
+                onclick="castVote(${p.id}, 'yes')" 
+                class="flex-1 py-1.5 rounded text-xs font-bold transition flex items-center justify-center gap-1 ${p.userVote === 'yes' ? 'bg-green-600 text-white shadow-md ring-2 ring-green-400' : 'bg-gray-800 text-gray-300 hover:bg-gray-600'}"
+              >
+                <span>👍</span> Vote Yes
+              </button>
+              <button 
+                onclick="castVote(${p.id}, 'no')" 
+                class="flex-1 py-1.5 rounded text-xs font-bold transition flex items-center justify-center gap-1 ${p.userVote === 'no' ? 'bg-red-600 text-white shadow-md ring-2 ring-red-400' : 'bg-gray-800 text-gray-300 hover:bg-gray-600'}"
+              >
+                <span>👎</span> Vote No
+              </button>
+            </div>
+          </div>
+        `;
+
+        container.appendChild(card);
+      });
+    }
+
+    function castVote(proposalId, choice) {
+      const proposal = proposals.find(p => p.id === proposalId);
+      if (!proposal) return;
+
+      if (proposal.userVote === choice) {
+        // Toggle off
+        if (choice === 'yes') proposal.yes--;
+        if (choice === 'no') proposal.no--;
+        proposal.userVote = null;
+      } else {
+        // Remove previous vote
+        if (proposal.userVote === 'yes') proposal.yes--;
+        if (proposal.userVote === 'no') proposal.no--;
+
+        // Add new vote
+        if (choice === 'yes') proposal.yes++;
+        if (choice === 'no') proposal.no++;
+        proposal.userVote = choice;
+      }
+
+      renderProposals();
+    }
+
+    // Team search filter function
+    function filterTeams() {
+      const query = document.getElementById('teamSearch').value.toLowerCase();
+      const cards = document.querySelectorAll('.team-card');
+
+      cards.forEach(card => {
+        const text = card.textContent.toLowerCase();
+        if (text.includes(query)) {
+          card.style.display = 'block';
+        } else {
+          card.style.display = 'none';
+        }
+      });
+    }
+
+    // Initialize on page load
+    document.addEventListener('DOMContentLoaded', () => {
+      renderProposals();
+    });
+  </script>
+</body>
 </html>
