@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Sweatpants on Sunday — League Hub</title>
-  <meta name="description" content="Fantasy Football League hub: teams, records, stats, trade bank, payouts, and voting." />
+  <meta name="description" content="Fantasy Football League hub: teams, records, stats, trade bank, and payouts." />
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
     /* Custom scrollbar for trophy column */
@@ -39,7 +39,6 @@
       <nav class="flex items-center space-x-1 sm:space-x-2 text-xs sm:text-sm">
         <a href="#payouts" class="px-3 py-1.5 rounded-lg text-gray-300 hover:text-white hover:bg-gray-700 transition">Payouts</a>
         <a href="#trade-money" class="px-3 py-1.5 rounded-lg text-gray-300 hover:text-white hover:bg-gray-700 transition">Trade Bank</a>
-        <a href="#votes" class="px-3 py-1.5 rounded-lg text-gray-300 hover:text-white hover:bg-gray-700 transition">Proposals</a>
         <a href="#teams" class="px-3 py-1.5 rounded-lg text-gray-300 hover:text-white hover:bg-gray-700 transition">Teams</a>
       </nav>
     </div>
@@ -234,27 +233,6 @@
       </div>
     </section>
 
-    <!-- League Votes Section -->
-    <section id="votes" class="bg-gray-800 p-6 rounded-xl border border-gray-700/60 shadow-md">
-      <div class="border-b border-gray-700 pb-4 mb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div>
-          <h2 class="text-2xl font-bold text-white flex items-center gap-2">
-            <span>🗳️</span> Offseason Rule Proposals
-          </h2>
-          <p class="text-xs text-gray-300 mt-1 leading-relaxed">
-            All managers can propose changes. Vote in the group chat or click below to simulate live league voting.
-          </p>
-        </div>
-        <span class="bg-blue-500/10 text-blue-400 border border-blue-500/30 text-xs font-semibold px-3 py-1.5 rounded-lg self-start sm:self-center">
-          Commissioner: Adam Chambers
-        </span>
-      </div>
-
-      <div class="grid md:grid-cols-2 gap-6" id="proposalsGrid">
-        <!-- Dynamic proposal cards generated via JS -->
-      </div>
-    </section>
-
     <!-- Teams Section -->
     <section id="teams" class="bg-gray-800 p-6 rounded-xl border border-gray-700/60 shadow-md">
       <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6 border-b border-gray-700 pb-4">
@@ -404,128 +382,8 @@
     <p>Built for Sweatpants on Sunday Fantasy Football League ✌️</p>
   </footer>
 
-  <!-- Voting Logic & Interactive Features -->
+  <!-- Interactive Features -->
   <script>
-    // Initial Proposal Data
-    const proposals = [
-      {
-        id: 1,
-        title: "Shuffle schedules at the start of every season?",
-        subtext: "Randomizes match schedules each offseason rather than maintaining static rotations.",
-        yes: 7,
-        no: 3,
-        userVote: null
-      },
-      {
-        id: 2,
-        title: "Move away from the ESPN app?",
-        subtext: "If passed, a follow-up vote will decide the replacement platform (Sleeper, Yahoo, etc.).",
-        yes: 9,
-        no: 2,
-        userVote: null
-      },
-      {
-        id: 3,
-        title: "Remove the Kicker position?",
-        subtext: "If removed, a secondary vote will decide whether to add a FLEX spot or keep roster size.",
-        yes: 4,
-        no: 6,
-        userVote: null
-      },
-      {
-        id: 4,
-        title: "Implement 1 Keeper per team?",
-        subtext: "Cost: Penalty of 1 round higher than drafted. Players can only be kept once consecutively.",
-        yes: 8,
-        no: 4,
-        userVote: null
-      }
-    ];
-
-    function renderProposals() {
-      const container = document.getElementById('proposalsGrid');
-      container.innerHTML = '';
-
-      proposals.forEach((p) => {
-        const totalVotes = p.yes + p.no;
-        const yesPercent = totalVotes > 0 ? Math.round((p.yes / totalVotes) * 100) : 0;
-        const noPercent = totalVotes > 0 ? Math.round((p.no / totalVotes) * 100) : 0;
-        const isPassing = p.yes > p.no;
-
-        const card = document.createElement('div');
-        card.className = "bg-gray-700/50 border border-gray-600/50 p-5 rounded-xl flex flex-col justify-between shadow-sm hover:border-gray-500 transition";
-
-        card.innerHTML = `
-          <div>
-            <div class="flex items-center justify-between mb-2">
-              <span class="text-xs font-bold text-yellow-400 uppercase tracking-wider">Proposal #${p.id}</span>
-              <span class="text-xs font-semibold px-2 py-0.5 rounded border ${isPassing ? 'bg-green-500/10 text-green-400 border-green-500/30' : 'bg-red-500/10 text-red-400 border-red-500/30'}">
-                ${isPassing ? 'Currently Passing' : 'Currently Failing'}
-              </span>
-            </div>
-            
-            <h3 class="font-bold text-white text-base mb-1">${p.title}</h3>
-            <p class="text-xs text-gray-300 leading-relaxed mb-4">${p.subtext}</p>
-          </div>
-
-          <div>
-            <!-- Progress Bar -->
-            <div class="space-y-1 mb-3">
-              <div class="flex justify-between text-xs font-semibold">
-                <span class="text-green-400">Yes: ${p.yes} (${yesPercent}%)</span>
-                <span class="text-red-400">No: ${p.no} (${noPercent}%)</span>
-              </div>
-              <div class="w-full bg-gray-800 h-2.5 rounded-full overflow-hidden flex">
-                <div class="bg-green-500 transition-all duration-300" style="width: ${yesPercent}%"></div>
-                <div class="bg-red-500 transition-all duration-300" style="width: ${noPercent}%"></div>
-              </div>
-            </div>
-
-            <!-- Action Buttons -->
-            <div class="flex items-center gap-2 pt-3 border-t border-gray-600/40">
-              <button 
-                onclick="castVote(${p.id}, 'yes')" 
-                class="flex-1 py-1.5 rounded text-xs font-bold transition flex items-center justify-center gap-1 ${p.userVote === 'yes' ? 'bg-green-600 text-white shadow-md ring-2 ring-green-400' : 'bg-gray-800 text-gray-300 hover:bg-gray-600'}"
-              >
-                <span>👍</span> Vote Yes
-              </button>
-              <button 
-                onclick="castVote(${p.id}, 'no')" 
-                class="flex-1 py-1.5 rounded text-xs font-bold transition flex items-center justify-center gap-1 ${p.userVote === 'no' ? 'bg-red-600 text-white shadow-md ring-2 ring-red-400' : 'bg-gray-800 text-gray-300 hover:bg-gray-600'}"
-              >
-                <span>👎</span> Vote No
-              </button>
-            </div>
-          </div>
-        `;
-
-        container.appendChild(card);
-      });
-    }
-
-    function castVote(proposalId, choice) {
-      const proposal = proposals.find(p => p.id === proposalId);
-      if (!proposal) return;
-
-      if (proposal.userVote === choice) {
-        // Toggle off
-        if (choice === 'yes') proposal.yes--;
-        if (choice === 'no') proposal.no--;
-        proposal.userVote = null;
-      } else {
-        // Remove previous vote
-        if (proposal.userVote === 'yes') proposal.yes--;
-        if (proposal.userVote === 'no') proposal.no--;
-
-        // Add new vote
-        if (choice === 'yes') proposal.yes++;
-        if (choice === 'no') proposal.no++;
-        proposal.userVote = choice;
-      }
-
-      renderProposals();
-    }
-
     // Team search filter function
     function filterTeams() {
       const query = document.getElementById('teamSearch').value.toLowerCase();
@@ -540,11 +398,6 @@
         }
       });
     }
-
-    // Initialize on page load
-    document.addEventListener('DOMContentLoaded', () => {
-      renderProposals();
-    });
   </script>
 </body>
 </html>
