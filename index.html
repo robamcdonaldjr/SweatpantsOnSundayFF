@@ -165,19 +165,69 @@
 
       <!-- League Votes Section -->
       <section id="votes" class="bg-gray-800 p-6 rounded-xl">
-        <h2 class="text-2xl font-semibold mb-4">League Votes for Upcoming Season</h2>
-        <p class="text-gray-300 text-sm mb-4">Each offseason, managers have the opportunity to propose rule or format changes for the upcoming season. Anyone in the league can submit a topic for vote. Adam keeps track of all suggestions and sends out a poll in the group chat so everyone can cast their vote.</p>
-        <ul class="list-disc list-inside text-gray-300 space-y-1">
-          <li>Any manager can submit a new rule or change for voting.</li>
-          <li>Adam records all proposals and organizes them into the official vote list.</li>
-          <li>Polls are sent out in the group chat to decide what changes to implement.</li>
-          <li>Final decisions are announced before draft day.</li>
-          <li>1. Shuffle schedules at the start of every season?</li>
-          <li>2. Move away from ESPN app? If yes, then we will decide which app after.</li>
-          <li>3. Remove kicker position? If yes, then continue to the next set of questions. If no, then ignore 3a. </li>
-          <li>3a. If kicker is removed, would you like to add a flex, or no flex?.</li>
-          <li>4. Every year we get to keep 1 guy on our active roster. You lose the pick the round before, Example: Allen second round, You would not get a first round pick.You can only keep the same player once.</li>
-        </ul>
+        <div class="border-b border-gray-700 pb-4 mb-6">
+          <h2 class="text-2xl font-semibold mb-2">League Votes for Upcoming Season</h2>
+          <p class="text-gray-300 text-sm leading-relaxed">
+            Each offseason, managers can propose rule or format changes. Submit ideas to <span class="text-yellow-400 font-semibold">Adam</span>, who tracks all proposals and organizes official polls in the group chat before draft day.
+          </p>
+        </div>
+
+        <div class="grid md:grid-cols-2 gap-4">
+          <!-- Proposal 1 -->
+          <div class="bg-gray-700 p-4 rounded-lg flex flex-col justify-between">
+            <div>
+              <div class="flex items-center justify-between mb-2">
+                <span class="text-xs font-bold text-yellow-400 uppercase tracking-wider">Proposal 1</span>
+                <span class="bg-yellow-400/10 text-yellow-400 text-xs px-2 py-0.5 rounded border border-yellow-400/20 font-medium">Pending Poll</span>
+              </div>
+              <h3 class="font-medium text-white">Shuffle schedules at the start of every season?</h3>
+            </div>
+          </div>
+
+          <!-- Proposal 2 -->
+          <div class="bg-gray-700 p-4 rounded-lg flex flex-col justify-between">
+            <div>
+              <div class="flex items-center justify-between mb-2">
+                <span class="text-xs font-bold text-yellow-400 uppercase tracking-wider">Proposal 2</span>
+                <span class="bg-yellow-400/10 text-yellow-400 text-xs px-2 py-0.5 rounded border border-yellow-400/20 font-medium">Pending Poll</span>
+              </div>
+              <h3 class="font-medium text-white">Move away from the ESPN app?</h3>
+            </div>
+            <p class="text-xs text-gray-400 mt-3 pt-2 border-t border-gray-600/50">
+              *If passed, a follow-up vote will determine the new platform.
+            </p>
+          </div>
+
+          <!-- Proposal 3 -->
+          <div class="bg-gray-700 p-4 rounded-lg flex flex-col justify-between">
+            <div>
+              <div class="flex items-center justify-between mb-2">
+                <span class="text-xs font-bold text-yellow-400 uppercase tracking-wider">Proposal 3</span>
+                <span class="bg-yellow-400/10 text-yellow-400 text-xs px-2 py-0.5 rounded border border-yellow-400/20 font-medium">Pending Poll</span>
+              </div>
+              <h3 class="font-medium text-white mb-2">Remove the Kicker position?</h3>
+              <ul class="text-xs text-gray-300 space-y-1 list-disc list-inside bg-gray-800/50 p-2.5 rounded border border-gray-600/30">
+                <li>If removed: Vote on adding an extra FLEX or no FLEX.</li>
+                <li>If kept: Roster settings remain unchanged.</li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- Proposal 4 -->
+          <div class="bg-gray-700 p-4 rounded-lg flex flex-col justify-between">
+            <div>
+              <div class="flex items-center justify-between mb-2">
+                <span class="text-xs font-bold text-yellow-400 uppercase tracking-wider">Proposal 4</span>
+                <span class="bg-yellow-400/10 text-yellow-400 text-xs px-2 py-0.5 rounded border border-yellow-400/20 font-medium">Pending Poll</span>
+              </div>
+              <h3 class="font-medium text-white mb-2">Implement 1 Keeper per team?</h3>
+              <ul class="text-xs text-gray-300 space-y-1 list-disc list-inside bg-gray-800/50 p-2.5 rounded border border-gray-600/30">
+                <li>Cost: Penalty of 1 round higher than drafted (e.g., 2nd-round player costs 1st-round pick).</li>
+                <li>Limit: A player can only be kept once.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
       </section>
     </main>
 
