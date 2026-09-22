@@ -40,6 +40,7 @@
         <a href="#payouts" class="px-3 py-1.5 rounded-lg text-gray-300 hover:text-white hover:bg-gray-700 transition">Payouts</a>
         <a href="#payments" class="px-3 py-1.5 rounded-lg text-gray-300 hover:text-white hover:bg-gray-700 transition">Payments</a>
         <a href="#trade-money" class="px-3 py-1.5 rounded-lg text-gray-300 hover:text-white hover:bg-gray-700 transition">Trade Bank</a>
+        <a href="#weekly-winners" class="px-3 py-1.5 rounded-lg text-gray-300 hover:text-white hover:bg-gray-700 transition">Weekly Winners</a>
         <a href="#teams" class="px-3 py-1.5 rounded-lg text-gray-300 hover:text-white hover:bg-gray-700 transition">Teams</a>
       </nav>
     </div>
@@ -378,6 +379,52 @@
             <tr class="border-t-2 border-gray-700 font-bold text-white bg-gray-900/40">
               <td class="p-3" colspan="3">Total Trade Pot</td>
               <td class="p-3 text-right text-base text-green-400 font-black">$0</td>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+    </section>
+
+    <!-- Weekly High Winners Section -->
+    <section id="weekly-winners" class="bg-gray-800 p-6 rounded-xl border border-gray-700/60 shadow-md">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4 border-b border-gray-700 pb-4">
+        <div>
+          <h2 class="text-2xl font-bold text-white flex items-center gap-2">
+            <span>⚡</span> Weekly High Winners
+          </h2>
+          <p class="text-xs text-gray-400 mt-1">Prize: $70 awarded each week to the top scorer</p>
+        </div>
+        <div class="flex items-center gap-3 bg-gray-900/60 px-4 py-2 rounded-lg border border-gray-700">
+          <span class="text-xs text-gray-400 uppercase font-bold tracking-wider">Total Payouts:</span>
+          <span class="text-xl font-black text-green-400">$140</span>
+        </div>
+      </div>
+
+      <div class="overflow-x-auto">
+        <table class="w-full text-left border-collapse text-sm">
+          <thead>
+            <tr class="border-b border-gray-700 text-gray-400 uppercase text-xs">
+              <th class="p-3">Week</th>
+              <th class="p-3">Manager</th>
+              <th class="p-3 text-right">Prize</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-gray-700/50 text-gray-200">
+            <tr class="hover:bg-gray-700/30 transition">
+              <td class="p-3 font-semibold text-yellow-400">Week 1</td>
+              <td class="p-3 font-semibold text-white">John Chambers</td>
+              <td class="p-3 text-right font-medium text-green-400">$70</td>
+            </tr>
+            <tr class="hover:bg-gray-700/30 transition">
+              <td class="p-3 font-semibold text-yellow-400">Week 2</td>
+              <td class="p-3 font-semibold text-white">Matt McDonald</td>
+              <td class="p-3 text-right font-medium text-green-400">$70</td>
+            </tr>
+          </tbody>
+          <tfoot>
+            <tr class="border-t-2 border-gray-700 font-bold text-white bg-gray-900/40">
+              <td class="p-3" colspan="2">Total Awarded</td>
+              <td class="p-3 text-right text-base text-green-400 font-black">$140</td>
             </tr>
           </tfoot>
         </table>
